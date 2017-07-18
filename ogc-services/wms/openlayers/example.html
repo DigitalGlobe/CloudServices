@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WMS 512x256 Tiles</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.2.0/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.2.0/build/ol.js"></script>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+    var projExtent = ol.proj.get('EPSG:3857').getExtent();
+    var startResolution = ol.extent.getWidth(projExtent) / 256;
+    var resolutions = new Array(22);
+    for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+        resolutions[i] = startResolution / Math.pow(2, i);
+    }
+    var tileGrid = new ol.tilegrid.TileGrid({
+        extent: projExtent,
+        resolutions: resolutions,
+        tileSize: [256, 256]
+    });
+
+    var layers = [
+        new ol.layer.Tile({
+            source: new ol.source.OSM()
+        }),
+        new ol.layer.Tile({
+            source: new ol.source.TileWMS({
+                url: 'https://beta.digitalglobe.com/mapservice/wmsaccess?CONNECTID=ed14a3b1-cb22-4359-a368-29342a3bf62d&featureProfile=Global_Currency_Profile',
+                params: {'LAYERS': 'DigitalGlobe:Imagery', 'TILED': true},
+                serverType: 'geoserver',
+                tileGrid: tileGrid
+            })
+        })
+    ];
+    var map = new ol.Map({
+        layers: layers,
+        target: 'map',
+        view: new ol.View({
+            center: [-10997148, 4569099],
+            zoom: 4
+        })
+    });
+</script>
+</body>
+</html>
