@@ -1,0 +1,6 @@
+data_classification:
+  - public
+
+poc:
+  - name: GCS Marianas Team
+    email: DL-GCS-Marianas@digitalglobe.com
