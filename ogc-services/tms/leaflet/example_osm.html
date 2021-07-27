@@ -1,0 +1,32 @@
+<html><head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+<style>
+#map { position:absolute; top:20px; left:20px; width:95%; height:95%}
+</style></head>
+<body><div id="map"></div>
+<script type="text/javascript">
+var map;
+var zoom = 15;
+var connectId = 'REPLACE WITH YOUR CONNECT ID!!!!!!!!!!!!!!!!!!!!!';
+var labels = new L.tileLayer('https://securewatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/Digitalglobe:OSMTransparentTMSTileService@EPSG:3857@jpg/{z}/{x}/{y}.jpg?connectId=' + connectId, {
+    tms: true, minZoom: 1, maxZoom: 20
+});
+var background = new L.tileLayer('https://securewatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/Digitalglobe:OSMTMSTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=' + connectId, {
+    tms: true, minZoom: 1, maxZoom: 20
+});
+$(function () {
+    map = new L.map('map', {
+        center: new L.LatLng(0.31310879, 9.50317383),
+        zoom: zoom, zoomControl: true,
+        layers: [background]
+    });
+    map.attributionControl.setPrefix('');
+    var overlays = {
+            "OSM: Labels": labels,
+            "OSM: Background": background
+    };
+    L.control.layers(overlays, null, {collapsed: false}).addTo(map);
+});
+</script></body></html>
