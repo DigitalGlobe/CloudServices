@@ -1,45 +1,29 @@
 <!DOCTYPE html>
-<html>
-<head>
-	
-	<title>WMS example - Leaflet</title>
-
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.1.0/dist/leaflet.css" integrity="sha512-wcw6ts8Anuw10Mzh9Ytw4pylW8+NAD4ch3lqm9lzAsTxg0GFeJgoAtxuCLREZSC5lUXdVyo/7yfsqFjQ4S+aKw==" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js" integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA==" crossorigin=""></script>
-
-
-	<style>
-		#map {
-			width: 1024px;
-			height: 600px;
-		}
-	</style>
-
-	
-</head>
-<body>
-
-<div id='map'></div>
-
+<html><head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+<style>
+#map { position:absolute; top:20px; left:20px; width:95%; height:95%}
+</style></head>
+<body><div id="map"></div>
 <script type="text/javascript">
-
-	var map = L.map('map', {
-		center: [-17, -67],
-		zoom: 3
-	});
-
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-    
-	L.tileLayer.wms('https://beta.digitalglobe.com/mapservice/wmsaccess?CONNECTID=ed14a3b1-cb22-4359-a368-29342a3bf62d&featureProfile=Global_Currency_Profile', {
-		layers: 'DigitalGlobe:Imagery'
-	}).addTo(map);
-
-</script>
-
-</body>
-</html>
+var map;
+var zoom = 15;
+var connectId = 'REPLACE WITH YOUR CONNECT ID!!!!!!!!!!!!!!!!!!!!!';
+var wms = new L.tileLayer.wms('https://securewatch.maxar.com/mapservice/wmsaccess?CONNECTID=' + connectId, {
+   layers: 'DigitalGlobe:Imagery'
+});
+$(function () {
+    map = new L.map('map', {
+        center: new L.LatLng(0.31310879, 9.50317383),
+        zoom: zoom, zoomControl: true,
+        layers: [wms]
+    });
+    map.attributionControl.setPrefix('');
+    var overlays = {
+	"WMS: Title": wms
+    };
+    L.control.layers(overlays, null, {collapsed: false}).addTo(map);
+});
+</script></body></html>
