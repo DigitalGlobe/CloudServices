@@ -31,10 +31,10 @@
             new ol.layer.Tile({
                 opacity: 1,
                 source: new ol.source.WMTS({
-                    url: 'https://securewatch.maxar.com/earthservice/wmtsaccess?CONNECTID=<YOUR-CONNECTID>&featureProfile=Global_Currency_Profile',
+                    url: 'https://securewatch.maxar.com/earthservice/wmtsaccess?CONNECTID=<YOUR-CONNECTID>&featureProfile=Vivid_2019',
                     layer: 'DigitalGlobe:ImageryTileService',
                     matrixSet: 'EPSG:3857',
-                    format: 'image/jpeg',
+                    format: 'image/png',
                     projection: projection,
                     tileGrid: new ol.tilegrid.WMTS({
                         origin: ol.extent.getTopLeft(projectionExtent),

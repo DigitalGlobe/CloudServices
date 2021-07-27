@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  
 <html><head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.js"></script>
@@ -11,18 +11,18 @@
 var map;
 var zoom = 15;
 var connectId = 'REPLACE WITH YOUR CONNECT ID!!!!!!!!!!!!!!!!!!!!!';
-var wms = new L.tileLayer.wms('https://securewatch.maxar.com/mapservice/wmsaccess?CONNECTID=' + connectId, {
-   layers: 'DigitalGlobe:Imagery'
+var recent = new L.tileLayer('https://securewatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=' + connectId, {
+    tms: true, minZoom: 1, maxZoom: 20
 });
 $(function () {
     map = new L.map('map', {
         center: new L.LatLng(0.31310879, 9.50317383),
         zoom: zoom, zoomControl: true,
-        layers: [wms]
+        layers: [recent]
     });
     map.attributionControl.setPrefix('');
     var overlays = {
-	"WMS: Title": wms
+            "TMS: Recent Imagery": recent
     };
     L.control.layers(overlays, null, {collapsed: false}).addTo(map);
 });

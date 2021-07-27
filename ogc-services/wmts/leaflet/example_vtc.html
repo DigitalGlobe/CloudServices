@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html><head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.4.0/leaflet.js"></script>
@@ -11,18 +10,18 @@
 var map;
 var zoom = 15;
 var connectId = 'REPLACE WITH YOUR CONNECT ID!!!!!!!!!!!!!!!!!!!!!';
-var wms = new L.tileLayer.wms('https://securewatch.maxar.com/mapservice/wmsaccess?CONNECTID=' + connectId, {
-   layers: 'DigitalGlobe:Imagery'
+var wmts = new L.tileLayer('https://securewatch.maxar.com/earthservice/wmtsaccess?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&TileMatrixSet=EPSG:3857&LAYER=DigitalGlobe:ImageryTileService&FORMAT=image/png&featureProfile=Vivid_2019&TileMatrix=EPSG:3857:{z}&TILEROW={y}&TILECOL={x}&connectId=' + connectId, {
+    wmts: true, minZoom: 5, maxZoom: 20
 });
 $(function () {
     map = new L.map('map', {
         center: new L.LatLng(0.31310879, 9.50317383),
         zoom: zoom, zoomControl: true,
-        layers: [wms]
+        layers: [wmts]
     });
     map.attributionControl.setPrefix('');
     var overlays = {
-	"WMS: Title": wms
+	"WMTS: Vivid Tile Cache": wmts
     };
     L.control.layers(overlays, null, {collapsed: false}).addTo(map);
 });

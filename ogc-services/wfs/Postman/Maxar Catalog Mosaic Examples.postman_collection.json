@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "e3c48f9d-660b-4640-ae8b-b3a7ee35de36",
+		"name": "Maxar Catalog Mosaic Collection (No Auth)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Describe Feature Mosaic Products",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?SERVICE=WFS&REQUEST=DescribeFeatureType&VERSION=2.0.0&CONNECTID={{connectid}}&TYPENAME=DigitalGlobe:MaxarCatalogMosaicProducts",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "REQUEST",
+							"value": "DescribeFeatureType",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:MaxarCatalogMosaicProducts",
+							"description": "REQUIRED."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Describe Feature Mosaic Seamlines",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?TYPENAME=DigitalGlobe:MaxarCatalogMosaicSeamlines&SERVICE=WFS&REQUEST=DescribeFeatureType&CONNECTID={{connectid}}&VERSION=2.0.0",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:MaxarCatalogMosaicSeamlines",
+							"description": "REQIURED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQIURED."
+						},
+						{
+							"key": "REQUEST",
+							"value": "DescribeFeatureType",
+							"description": "REQIURED."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQIURED."
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Describe Feature Mosaic Tiles",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?TYPENAME=DigitalGlobe:MaxarCatalogMosaicTiles&SERVICE=WFS&REQUEST=DescribeFeatureType&CONNECTID={{connectid}}&VERSION=2.0.0",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:MaxarCatalogMosaicTiles",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "REQUEST",
+							"value": "DescribeFeatureType",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature Mosaic Products",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?TYPENAME=DigitalGlobe:MaxarCatalogMosaicProducts&SERVICE=WFS&REQUEST=GetFeature&CONNECTID={{connectid}}&VERSION=2.0.0",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:MaxarCatalogMosaicProducts",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetFeature",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "BBOX",
+							"value": "12.12,-170.22,42.79,-111.33",
+							"description": "OPTIONAL. To limit returns to a bounding box.",
+							"disabled": true
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "product_line_item Like '25%VIVID25%'",
+							"description": "Optional for specific product_line_item field.",
+							"disabled": true
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "BBOX(shape,12.12,-170.22,42.79,-111.33) AND product_name = 'VIVID_NA28_20Q2'",
+							"description": "OPTIONAL. Cannot be used with BBOX. Ideally, use BBOX in CQL Filter to avoid large requests which may time out.",
+							"disabled": true
+						},
+						{
+							"key": "OUTPUTFORMAT",
+							"value": "",
+							"description": "OPTIONAL. Format of response. See GetCapabilities for valid values.",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature Mosaic Seamlines",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?TYPENAME=DigitalGlobe:MaxarCatalogMosaicSeamlines&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&CONNECTID={{connectid}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:MaxarCatalogMosaicSeamlines",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetFeature",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "BBOX",
+							"value": "12.12,-170.22,42.79,-111.33",
+							"description": "OPTIONAL. To limit returns to a bounding box.",
+							"disabled": true
+						},
+						{
+							"key": "OUTPUTFORMAT",
+							"value": "shape-zip",
+							"description": "OPTIONAL. Format of response. Options inlcude json, shapefile, etc. See GetCapabilities for valid values.",
+							"disabled": true
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "BBOX(shape,12.12,-170.22,42.79,-111.33) AND product_id = 'VIVID_NA28_20Q2'",
+							"description": "OPTIONAL. Cannot be used with BBOX. Ideally, use BBOX in CQL Filter to avoid large requests which may time out.",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature Mosaic Tiles",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?SERVICE=WFS&REQUEST=GetFeature&TYPENAME=DigitalGlobe:MaxarCatalogMosaicTiles&CONNECTID={{connectid}}&VERSION=2.0.0",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetFeature",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:MaxarCatalogMosaicTiles",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "BBOX",
+							"value": "12.12,-170.22,42.79,-111.33",
+							"description": "OPTIONAL. To limit returns to a bounding box.",
+							"disabled": true
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "product_line_item Like '25%VIVID25%'",
+							"description": "OPTIONAL. Returns specific product_line_item field.",
+							"disabled": true
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "BBOX(shape,12.12,-170.22,42.79,-111.33) AND product_id = 'VIVID_NA28_20Q2'",
+							"description": "OPTIONAL. Cannot be used with BBOX. Ideally, use BBOX in CQL Filter to avoid large requests which may time out.",
+							"disabled": true
+						},
+						{
+							"key": "OUTPUTFORMAT",
+							"value": "",
+							"description": "OPTIONAL. Format of response. See GetCapabilities for valid values.",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

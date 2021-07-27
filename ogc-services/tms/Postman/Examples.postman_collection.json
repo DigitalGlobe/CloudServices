@@ -1,0 +1,433 @@
+{
+	"info": {
+		"_postman_id": "969af500-663b-4492-b7de-dcf10ced1bf3",
+		"name": "GCS OGC TMS Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Terrain",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/tmsaccess/:service/:version/:layerTileMatrix/:zoom/:tileColumn/:tileRowFormat?connectId={{connectid}}&{{$randomWord}}=",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"tmsaccess",
+						":service",
+						":version",
+						":layerTileMatrix",
+						":zoom",
+						":tileColumn",
+						":tileRowFormat"
+					],
+					"query": [
+						{
+							"key": "connectId",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					],
+					"variable": [
+						{
+							"key": "service",
+							"value": "tms",
+							"description": "REQUIRED. Service being used for current call."
+						},
+						{
+							"key": "version",
+							"value": "1.0.0",
+							"description": "REQUIRED. Version being used for current call."
+						},
+						{
+							"key": "layerTileMatrix",
+							"value": "Digitalglobe:TerrainTMSTileService@EPSG:3857",
+							"description": "REQUIRED. Layer being utilized and Tile Matrix being used for current call."
+						},
+						{
+							"key": "zoom",
+							"value": "15",
+							"description": "REQUIRED. Zoom level being used for current call."
+						},
+						{
+							"key": "tileColumn",
+							"value": "6827",
+							"description": "REQUIRED. Tile Column being used for current call."
+						},
+						{
+							"key": "tileRowFormat",
+							"value": "20333.jpg",
+							"description": "REQUIRED. Tile Row and image format being used for current call."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "512 Tile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/tmsaccess/:service/:version/:layerTileMatrix/:zoom/:tileColumn/:tileRowFormat?connectId={{connectid}}&{{$randomWord}}={{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"tmsaccess",
+						":service",
+						":version",
+						":layerTileMatrix",
+						":zoom",
+						":tileColumn",
+						":tileRowFormat"
+					],
+					"query": [
+						{
+							"key": "connectId",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "{{$randomWord}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "service",
+							"value": "tms",
+							"description": "REQUIRED. Service being used for current call."
+						},
+						{
+							"key": "version",
+							"value": "1.0.0",
+							"description": "REQUIRED. Version being used for current call."
+						},
+						{
+							"key": "layerTileMatrix",
+							"value": "DigitalGlobe:ImageryTileService@EPSG:3857:512",
+							"description": "REQUIRED. Layer being utilized and Tile Matrix being used for current call."
+						},
+						{
+							"key": "zoom",
+							"value": "15",
+							"description": "REQUIRED. Zoom level being used for current call."
+						},
+						{
+							"key": "tileColumn",
+							"value": "6827",
+							"description": "REQUIRED. Tile Column being used for current call."
+						},
+						{
+							"key": "tileRowFormat",
+							"value": "20333.png",
+							"description": "REQUIRED. Tile Row and image format being used for current call."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "png Tile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/tmsaccess/:service/:version/:layerTileMatrix/:zoom/:tileColumn/:tileRowFormat?connectId={{connectid}}&{{$randomWord}}={{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"tmsaccess",
+						":service",
+						":version",
+						":layerTileMatrix",
+						":zoom",
+						":tileColumn",
+						":tileRowFormat"
+					],
+					"query": [
+						{
+							"key": "connectId",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "{{$randomWord}}"
+						},
+						{
+							"key": "flipy",
+							"value": "True",
+							"description": "OPTIONAL. Use if app/client does not support TMS spec such as ArcGIS online. Flips y-axis tile. Can be calculated as flippedy=(2^zoom_level) - original_y - 1. ",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "service",
+							"value": "tms",
+							"description": "REQUIRED. Service being used for current call."
+						},
+						{
+							"key": "version",
+							"value": "1.0.0",
+							"description": "REQUIRED. Version being used for current call."
+						},
+						{
+							"key": "layerTileMatrix",
+							"value": "DigitalGlobe:ImageryTileService@EPSG:3857",
+							"description": "REQUIRED. Layer being utilized and Tile Matrix being used for current call."
+						},
+						{
+							"key": "zoom",
+							"value": "15",
+							"description": "REQUIRED. Zoom level being used for current call."
+						},
+						{
+							"key": "tileColumn",
+							"value": "6827",
+							"description": "REQUIRED. Tile Column being used for current call."
+						},
+						{
+							"key": "tileRowFormat",
+							"value": "20333.png",
+							"description": "REQUIRED. Tile Row and image format being used for current call."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "StreetMap",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/tmsaccess/:service/:version/:layerTileMatrix/:zoom/:tileColumn/:tileRowFormat?connectId={{connectid}}&{{$randomWord}}=",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"tmsaccess",
+						":service",
+						":version",
+						":layerTileMatrix",
+						":zoom",
+						":tileColumn",
+						":tileRowFormat"
+					],
+					"query": [
+						{
+							"key": "connectId",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					],
+					"variable": [
+						{
+							"key": "service",
+							"value": "tms",
+							"description": "REQUIRED. Service being used for current call."
+						},
+						{
+							"key": "version",
+							"value": "1.0.0",
+							"description": "REQUIRED. Version being used for current call."
+						},
+						{
+							"key": "layerTileMatrix",
+							"value": "Digitalglobe:OSMTMSTileService@EPSG:3857",
+							"description": "REQUIRED. Layer being utilized and Tile Matrix being used for current call."
+						},
+						{
+							"key": "zoom",
+							"value": "15",
+							"description": "REQUIRED. Zoom level being used for current call."
+						},
+						{
+							"key": "tileColumn",
+							"value": "6827",
+							"description": "REQUIRED. Tile Column being used for current call."
+						},
+						{
+							"key": "tileRowFormat",
+							"value": "20333.jpg",
+							"description": "REQUIRED. Tile Row and image format being used for current call."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCapabilities",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/tmsaccess/:service/:version?connectID={{connectid}}&{{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"tmsaccess",
+						":service",
+						":version"
+					],
+					"query": [
+						{
+							"key": "connectID",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": null,
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					],
+					"variable": [
+						{
+							"key": "service",
+							"value": "tms",
+							"description": "REQUIRED. Service being used for current call."
+						},
+						{
+							"key": "version",
+							"value": "1.0.0",
+							"description": "REQUIRED. Version being used for current call."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transparent StreetMap",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/tmsaccess/:service/:version/:layerTileMatrix/:zoom/:tileColumn/:tileRowFormat?connectId={{connectid}}&{{$randomWord}}=",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"tmsaccess",
+						":service",
+						":version",
+						":layerTileMatrix",
+						":zoom",
+						":tileColumn",
+						":tileRowFormat"
+					],
+					"query": [
+						{
+							"key": "connectId",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					],
+					"variable": [
+						{
+							"key": "service",
+							"value": "tms",
+							"description": "REQUIRED. Service being used for current call."
+						},
+						{
+							"key": "version",
+							"value": "1.0.0",
+							"description": "REQUIRED. Version being used for current call."
+						},
+						{
+							"key": "layerTileMatrix",
+							"value": "Digitalglobe:OSMTransparentTMSTileService@EPSG:3857",
+							"description": "REQUIRED. Layer being utilized and Tile Matrix being used for current call."
+						},
+						{
+							"key": "zoom",
+							"value": "15",
+							"description": "REQUIRED. Zoom level being used for current call."
+						},
+						{
+							"key": "tileColumn",
+							"value": "6827",
+							"description": "REQUIRED. Tile Column being used for current call."
+						},
+						{
+							"key": "tileRowFormat",
+							"value": "20333.png",
+							"description": "REQUIRED. Tile Row and image format being used for current call."
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
