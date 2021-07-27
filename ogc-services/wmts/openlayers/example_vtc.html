@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WMTS</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v5.3.0/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v5.3.0/build/ol.js"></script>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+    var projection = ol.proj.get('EPSG:3857');
+    var projectionExtent = projection.getExtent();
+    var size = ol.extent.getWidth(projectionExtent) / 256;
+    var resolutions = new Array(14);
+    var matrixIds = new Array(14);
+    
+    for (var z = 0; z < 14; ++z) {
+        // generate resolutions and matrixIds arrays for this WMTS
+        resolutions[z] = size / Math.pow(2, z);
+        matrixIds[z] = 'EPSG:3857:' + z;
+    }
+
+    var map = new ol.Map({
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM(),
+                opacity: 1
+            }),
+            new ol.layer.Tile({
+                opacity: 1,
+                source: new ol.source.WMTS({
+                    url: 'https://securewatch.maxar.com/earthservice/wmtsaccess?CONNECTID=<YOUR-CONNECTID>&featureProfile=Vivid_2019',
+                    layer: 'DigitalGlobe:ImageryTileService',
+                    matrixSet: 'EPSG:3857',
+                    format: 'image/png',
+                    projection: projection,
+                    tileGrid: new ol.tilegrid.WMTS({
+                        origin: ol.extent.getTopLeft(projectionExtent),
+                        resolutions: resolutions,
+                        matrixIds: matrixIds
+                    }),
+                    style: '',
+                    wrapX: true
+                })
+            })
+        ],
+        target: 'map',
+        controls: ol.control.defaults({
+            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                collapsible: false
+            })
+        }),
+        view: new ol.View({
+            center: [-11158582, 4813697],
+            zoom: 4
+        })
+    });
+</script>
+</body>
+</html>
