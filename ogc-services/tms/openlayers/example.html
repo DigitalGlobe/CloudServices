@@ -1,0 +1,47 @@
+<html><head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.20.1/ol.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol3-layerswitcher@1.1.2/src/ol3-layerswitcher.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/3.20.1/ol.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ol3-layerswitcher@1.1.2/src/ol3-layerswitcher.js"></script>
+<style>
+#map {position:absolute; top:20px; left:20px; width:95%; height:95%}
+</style></head>
+<body><div id="map"></div>
+
+<script type="text/javascript">
+(function () {
+    var projExtent = ol.proj.get('EPSG:3857').getExtent();
+    var startResolution = ol.extent.getWidth(projExtent) / 256;
+    var connectId = 'REPLACE WITH YOUR CONNECT ID!!!!!!!!!!!!!!!!!!!!!';
+    var resolutions = new Array(21);
+    for (var i = 0, ii = resolutions.length; i < ii; ++i) {
+       resolutions[i] = startResolution / Math.pow(2, i);
+    }
+    var tileGrid = new ol.tilegrid.TileGrid({extent: projExtent, resolutions: resolutions});
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                title: 'TMS: Terrain Map',
+                source:  new ol.source.TileImage({
+                    crossOrigin: null, extent: projExtent,
+                    tileGrid: tileGrid,
+                    url: 'https://securewatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/Digitalglobe:TerrainTMSTileService@EPSG:3857@jpg/{z}/{x}/{-y}.jpg?connectId=' + connectId
+                })
+            }),
+            new ol.layer.Tile({
+                title: 'TMS: Recent Imagery',
+                source: new ol.source.TileImage({
+                    crossOrigin: null, extent: projExtent,
+                    tileGrid: tileGrid,
+                    url: 'https://securewatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{-y}.png?connectId=' + connectId
+                })
+            })
+    ],
+    view: new ol.View({
+        center: [1389988.403275147, 5144506.254763182],
+        zoom: 15 })
+    });
+    map.addControl(new ol.control.LayerSwitcher({}));
+})();
+</script></body></html>
