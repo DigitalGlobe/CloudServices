@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "a424f925-c2c6-441c-be6a-bcf276624f34",
+		"name": "GCS OGC WCS Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "WCS GetCoverage",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/deliveryservice/wcsaccess?CONNECTID={{connectid}}&SERVICE=WCS&REQUEST=GetCoverage&VERSION=1.1.1&IDENTIFIER=6dcf02d4a4b2b98d6b1ce8deb3137f58&BOUNDINGBOX=39.7530,-104.9962,39.7580,-104.9912&GRIDCRS=urn:ogc:def:crs:EPSG::4326&GRIDBASECRS=urn:ogc:def:crs:EPSG::4326&GRIDOFFSETS=.0000045 ,.0000045 &FORMAT=image/jpeg",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"deliveryservice",
+						"wcsaccess"
+					],
+					"query": [
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WCS",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetCoverage",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "1.1.1",
+							"description": "REQUIRED (defaults to 1.1.1)"
+						},
+						{
+							"key": "IDENTIFIER",
+							"value": "6dcf02d4a4b2b98d6b1ce8deb3137f58",
+							"description": "REQUIRED. featureId to be returned, comma-separated list if multiple features. The featureId can be discovered via a  WFS GetFeature request. See WFS examples for details. Note that his example may not work if this specific featureId is not availalble to the account, use an alternate feature if that is the case."
+						},
+						{
+							"key": "BOUNDINGBOX",
+							"value": "39.7530,-104.9962,39.7580,-104.9912",
+							"description": "REQUIRED. Lat-long if GridCRS is 4326."
+						},
+						{
+							"key": "GRIDCRS",
+							"value": "urn:ogc:def:crs:EPSG::4326",
+							"description": "REQUIRED for EPSG:4326"
+						},
+						{
+							"key": "GRIDBASECRS",
+							"value": "urn:ogc:def:crs:EPSG::4326",
+							"description": "OPTIONAL for EPSG:4326"
+						},
+						{
+							"key": "GRIDOFFSETS",
+							"value": ".0000045 ,.0000045 ",
+							"description": "REQUIRED for EPSG:4326. Desired output resolution in units of GridCRS."
+						},
+						{
+							"key": "FORMAT",
+							"value": "image/jpeg",
+							"description": "REQUIRED. See getCapabilities for valid values."
+						},
+						{
+							"key": "BOUNDINGBOX",
+							"value": "500325.53,4400343.23,500753.81,4400898.19,EPSG:32613",
+							"description": "REQUIRED. Lat-long if GridCRS is 4326 (default). Specify UTM EPSG if UTM is desired.",
+							"disabled": true
+						},
+						{
+							"key": "GRIDCRS",
+							"value": "urn:ogc:def:crs:EPSG::32613",
+							"description": "REQUIRED for UTM.",
+							"disabled": true
+						},
+						{
+							"key": "GRIDBASECRS",
+							"value": "urn:ogc:def:crs:EPSG::32613",
+							"description": "REQUIRED for UTM.",
+							"disabled": true
+						},
+						{
+							"key": "GRIDOFFSETS",
+							"value": "0.5,0.5",
+							"description": "REQUIRED for UTM. Desired output resolution in units of GridCRS.",
+							"disabled": true
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing.",
+							"disabled": true
+						}
+					]
+				},
+				"description": "#### Notes\n1. Maximum response size is 1GB\n2. Response contains 21-line multipart header which must usually be removed to be recognized as a valid image file.\n3. Use \"Send and Download\" to save file locally. Postman will not display the image due to the multipart header."
+			},
+			"response": []
+		},
+		{
+			"name": "WCS GetCapabilities",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/deliveryservice/wcsaccess?CONNECTID={{connectid}}&SERVICE=WCS&REQUEST=GetCapabilities&VERSION=1.1.1",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"deliveryservice",
+						"wcsaccess"
+					],
+					"query": [
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "SERVICE",
+							"value": "WCS",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetCapabilities",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "1.1.1",
+							"description": "REQUIRED (defaults to 1.1.1)"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing.",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WCS DescribeCoverage",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/deliveryservice/wcsaccess?CONNECTID={{connectid}}&SERVICE=WCS&REQUEST=DescribeCoverage&VERSION=1.1.1&IDENTIFIERS=6dcf02d4a4b2b98d6b1ce8deb3137f58",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"deliveryservice",
+						"wcsaccess"
+					],
+					"query": [
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}"
+						},
+						{
+							"key": "SERVICE",
+							"value": "WCS",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "REQUEST",
+							"value": "DescribeCoverage",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "VERSION",
+							"value": "1.1.1",
+							"description": "REQUIRED (defaults to 1.1.1)"
+						},
+						{
+							"key": "IDENTIFIERS",
+							"value": "6dcf02d4a4b2b98d6b1ce8deb3137f58",
+							"description": "The IDENTIFIER is the featureId of the image which can be discovered via a WFS GetFeature request. See WFS examples for details."
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing.",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
