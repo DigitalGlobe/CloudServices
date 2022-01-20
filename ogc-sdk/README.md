@@ -1,10 +1,6 @@
 # Installation Instructions
 1. Install python 3.7
-1. Ensure the following python modules are installed (requests, pyproj, shapely, functools, beautifulsoup4, IPython)
-1. Download/Clone repo to local machine.
-1. Extract repo zip file
-1. Move contents of "marians-team/share-libraries" to assigned system path
-   * Or, add "marians-team/share-libraries" directory to system paths
+1. pip install Maxar-OGC
 1. Create a credentials file called `.ogc-config` 
    * The file should look like:
    ```
@@ -16,7 +12,7 @@
    ```
 # Usage Instructions
 ```
-from ogc import Interface
+from Maxar_OGC import Interface
 try:
   sw_ogc = Interface() # if .ogc-config was created
 except:

@@ -1,12 +1,11 @@
 import os
 
-import ogc.process
-from ogc.auth import Auth
-from ogc.wms import WMS
-from ogc.wfs import WFS
-from ogc.wmts import WMTS
-from ogc.wcs import WCS
-import ogc.process as process
+from Maxar_OGC.auth import Auth
+from Maxar_OGC.wms import WMS
+from Maxar_OGC.wfs import WFS
+from Maxar_OGC.wmts import WMTS
+from Maxar_OGC.wcs import WCS
+import Maxar_OGC.process as process
 import requests
 import warnings
 from multiprocessing.dummy import Pool as ThreadPool
@@ -326,5 +325,5 @@ class Interface:
 
         for key, value in response_times.items():
             output = os.path.join(output_location, key + ".{}".format(format))
-            ogc.process.download_file(value, download_path=output)
+            Maxar_OGC.process.download_file(value, download_path=output)
         return "Finished full image download process, output directory is: {}".format(os.path.split(output)[0])

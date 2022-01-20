@@ -1,8 +1,8 @@
 from distutils.core import setup
 setup(
-  name = 'Maxar_OGC_SDK',        
-  packages = ['Maxar_OGC_SDK'],   
-  version = '0.1',      
+  name = 'Maxar_OGC',        
+  packages = ['Maxar_OGC'],   
+  version = '0.1.1',      
   license='MIT',        
   description = 'SDK for interacting with Maxar imagery platforms',  
   author = 'GCS Marianas Team',                   
@@ -13,7 +13,7 @@ setup(
   install_requires=[            
           'pyproj',
           'shapely',
-          ,'requests'
+          'requests'
       ],
   classifiers=[
     'Development Status :: 4 - Beta',    
