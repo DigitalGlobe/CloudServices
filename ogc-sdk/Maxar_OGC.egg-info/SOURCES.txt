@@ -1,0 +1,17 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+Maxar_OGC/__init__.py
+Maxar_OGC/auth.py
+Maxar_OGC/interface.py
+Maxar_OGC/process.py
+Maxar_OGC/wcs.py
+Maxar_OGC/wfs.py
+Maxar_OGC/wms.py
+Maxar_OGC/wmts.py
+Maxar_OGC.egg-info/PKG-INFO
+Maxar_OGC.egg-info/SOURCES.txt
+Maxar_OGC.egg-info/dependency_links.txt
+Maxar_OGC.egg-info/requires.txt
+Maxar_OGC.egg-info/top_level.txt

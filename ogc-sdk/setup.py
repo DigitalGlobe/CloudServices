@@ -1,15 +1,23 @@
-from distutils.core import setup
+import pathlib
+from setuptools import setup, find_packages
+
+HERE = pathlib.Path(__file__).parent.resolve()
+
+README = (HERE / "README.md").read_text()
+
 setup(
-  name = 'Maxar_OGC',        
-  packages = ['Maxar_OGC'],   
-  version = '0.1.1',      
+  name = 'Maxar_OGC',
+  packages = ['Maxar_OGC'],
+  version = '0.1.8',      
   license='MIT',        
   description = 'SDK for interacting with Maxar imagery platforms',  
+  long_description=README,
+  long_description_content_type="text/markdown",
   author = 'GCS Marianas Team',                   
   author_email = 'DL-GCS-Marianas@digitalglobe.com',   
-  url = 'https://github.com/DigitalGlobe/CloudServices',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+  url = 'https://github.com/DigitalGlobe/CloudServices',   
   keywords = ['OGC', 'WMS', 'WFS', 'WMTS', 'WCS', 'MAXAR', 'IMAGERY', 'GIS'], 
+  python_requires= '>=3.6',
   install_requires=[            
           'pyproj',
           'shapely',

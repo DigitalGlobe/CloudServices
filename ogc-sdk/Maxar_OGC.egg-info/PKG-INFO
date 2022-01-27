@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: Maxar-OGC
+Version: 0.1.8
+Summary: SDK for interacting with Maxar imagery platforms
+Home-page: https://github.com/DigitalGlobe/CloudServices
+Author: GCS Marianas Team
+Author-email: DL-GCS-Marianas@digitalglobe.com
+License: MIT
+Keywords: OGC,WMS,WFS,WMTS,WCS,MAXAR,IMAGERY,GIS
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+# Installation Instructions
+1. Install python 3.7
+1. pip install Maxar-OGC
+1. Create a credentials file called `.ogc-config` 
+   * The file should look like:
+   ```
+   [ogc]
+   user_name=<your-user-name>
+   user_password=<your-password>
+   user_tenant=https://securewatch.digitalglobe.com/
+   user_connectid=<your-desired-connectid>
+   ```
+# Usage Instructions
+```
+from Maxar_OGC import Interface
+try:
+  sw_ogc = Interface() # if .ogc-config was created
+except:
+  sw_ogc = Interface('https://securewatch.maxar.com/','<connect_id>') # if .ogc-config was not created
+print(help(sw_ogc))
+```
+
+
