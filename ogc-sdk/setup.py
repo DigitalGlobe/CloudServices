@@ -8,7 +8,7 @@ README = (HERE / "README.md").read_text()
 setup(
   name = 'Maxar_OGC',
   packages = ['Maxar_OGC'],
-  version = '0.1.8',      
+  version = '0.1.9',      
   license='MIT',        
   description = 'SDK for interacting with Maxar imagery platforms',  
   long_description=README,
@@ -21,7 +21,8 @@ setup(
   install_requires=[            
           'pyproj',
           'shapely',
-          'requests'
+          'requests',
+          'ipython'
       ],
   classifiers=[
     'Development Status :: 4 - Beta',    
