@@ -8,14 +8,17 @@ README = (HERE / "README.md").read_text()
 setup(
   name = 'Maxar_OGC',
   packages = ['Maxar_OGC'],
-  version = '0.1.9',      
+  version = '0.1.10',      
   license='MIT',        
   description = 'SDK for interacting with Maxar imagery platforms',  
   long_description=README,
   long_description_content_type="text/markdown",
   author = 'GCS Marianas Team',                   
   author_email = 'DL-GCS-Marianas@digitalglobe.com',   
-  url = 'https://github.com/DigitalGlobe/CloudServices',   
+  project_urls = {
+        'Documentation': 'https://cloudservices.readthedocs.io/en/latest/index.html',
+        'Source': 'https://github.com/DigitalGlobe/CloudServices'
+        },
   keywords = ['OGC', 'WMS', 'WFS', 'WMTS', 'WCS', 'MAXAR', 'IMAGERY', 'GIS'], 
   python_requires= '>=3.6',
   install_requires=[            
