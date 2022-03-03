@@ -1,6 +1,6 @@
 
-**Search**
-==========
+**Search **
+===========
 
 Kwargs that can be passed in:
 
