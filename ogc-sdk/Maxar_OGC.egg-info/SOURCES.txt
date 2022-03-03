@@ -1,6 +1,8 @@
 LICENSE
+LICENSE.txt
 README.md
 pyproject.toml
+setup.cfg
 setup.py
 Maxar_OGC/__init__.py
 Maxar_OGC/auth.py

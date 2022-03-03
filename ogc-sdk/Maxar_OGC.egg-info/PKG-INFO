@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Maxar-OGC
-Version: 0.1.10
+Version: 0.1.11
 Summary: SDK for interacting with Maxar imagery platforms
 Author: GCS Marianas Team
 Author-email: DL-GCS-Marianas@digitalglobe.com
@@ -19,6 +19,7 @@ Classifier: Programming Language :: Python :: 3.9
 Requires-Python: >=3.6
 Description-Content-Type: text/markdown
 License-File: LICENSE
+License-File: LICENSE.txt
 
 # Installation Instructions
 1. Install python 3.7
