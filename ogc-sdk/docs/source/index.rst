@@ -24,11 +24,12 @@ Installation:
 .. toctree::
    :maxdepth: 2
    
-   search
+   image_search
    download_image
    metadata
    discover_browse
    band_manipulation
+   
    sample_usage
 
 
