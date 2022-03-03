@@ -1,4 +1,4 @@
-**Band_manipulation**
+**Band Manipulation**
 ======================
 
 Args that can be passed in:
