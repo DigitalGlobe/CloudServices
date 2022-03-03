@@ -30,7 +30,6 @@ Installation:
    discover_browse
    band_manipulation
 
-
    sample_usage
 
 
