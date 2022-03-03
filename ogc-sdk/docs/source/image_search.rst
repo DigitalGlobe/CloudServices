@@ -1,5 +1,6 @@
-**Search **
-===========
+
+**Image Search**
+================
 
 Kwargs that can be passed in:
 
