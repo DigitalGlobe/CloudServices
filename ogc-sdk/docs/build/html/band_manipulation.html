@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Band_manipulation &#8212; Maxar-OGC 0.1.9 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code examples" href="sample_usage.html" />
+    <link rel="prev" title="Discover Browse" href="discover_browse.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="band-manipulation">
+<h1><strong>Band_manipulation</strong><a class="headerlink" href="#band-manipulation" title="Permalink to this headline">¶</a></h1>
+<p>Args that can be passed in:</p>
+<blockquote>
+<div><p><em>bbox (str) (required)</em></p>
+<blockquote>
+<div><p>A <code class="docutils literal notranslate"><span class="pre">bbox</span></code> (bounding box) is a rectangular feature that will encompass a desired Area Of Interest (AOI).
+The format is miny,minx,maxy,maxx (minimum y coordinate, minimum x coordinate, maximum y coordinate, maximum y coordinate) for
+projection EPSG:4326 or minx,miny,maxx,maxy,EPSG:3857 for projection EPSG:3857. Other projections are not supported at this time</p>
+<blockquote>
+<div><dl>
+<dt><strong>Example:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">bbox=&quot;39.7530,</span> <span class="pre">-104.9962,</span> <span class="pre">39.7580,</span> <span class="pre">-104.9912&quot;</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">bbox=&quot;-11688123.519228712,4830113.564872338,-11687566.921774745,4830837.565406834,EPSG:3857&quot;</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><em>featureid (str) (required)</em></p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">featureid</span></code> is the online id of the desired image feature</p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">featureid='d330c2f9486b4b5b0798b142fd1e6388'</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><em>band_combination (list) (required)</em></p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">band_combination</span></code> is a list of strings containing the desired band combination of 1-4 items. Available options include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>R</p></li>
+<li><p>G</p></li>
+<li><p>B</p></li>
+<li><p>C</p></li>
+<li><p>Y</p></li>
+<li><p>RE</p></li>
+<li><p>N</p></li>
+<li><p>N2</p></li>
+<li><p>S1</p></li>
+<li><p>S2</p></li>
+<li><p>S3</p></li>
+<li><p>S4</p></li>
+<li><p>S5</p></li>
+<li><p>S6</p></li>
+<li><p>S7</p></li>
+</ul>
+</div></blockquote>
+<p>Further information about bands can be found here: <a class="reference external" href="https://securewatchdocs.maxar.com/en-us/Miscellaneous/DevGuides/WMTS/WMTS_GetTile.htm#TheBandsParameter">Bands</a></p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">band_combination=['R',</span> <span class="pre">'B',</span> <span class="pre">'G',</span> <span class="pre">'C']</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><em>download (bool)</em></p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">download</span></code> is a boolean of whether or not the desired image should be downloaded. <code class="docutils literal notranslate"><span class="pre">download</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">download=True</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+<p>Kwargs that can be passed in:</p>
+<blockquote>
+<div><p><em>outputpath (str)</em></p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">outputpath</span></code> is the desired location for the image to be downloaded. <code class="docutils literal notranslate"><span class="pre">outputpath</span></code> defaults to root directory and defaults name of file
+to download (ex: C:Users&lt;user&gt;download.jpeg). File extension is also needed in <code class="docutils literal notranslate"><span class="pre">outputpath</span></code> if declared (ex: <code class="docutils literal notranslate"><span class="pre">r'C:\Users\</span>
+<span class="pre">&lt;user&gt;\image.jpeg'</span></code>)</p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">band_manipulation(bbox=&quot;39.7530,</span> <span class="pre">-104.9962,</span> <span class="pre">39.7580,</span> <span class="pre">-104.9912&quot;,</span> <span class="pre">featureid='d330c2f9486b4b5b0798b142fd1e6388',</span> <span class="pre">band_combination=['R',</span> <span class="pre">'B',</span> <span class="pre">'G',</span> <span class="pre">'C'],</span> <span class="pre">download=True,</span> <span class="pre">outputpath=r'C:\Users\&lt;user&gt;\image.jpeg')</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p><em>crs (str)</em></p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">crs</span></code> is the desired projection for spatial imagery rendered in either EPSG (European Petroleum Survey Group) 4326 or EPSG
+3857. If a <code class="docutils literal notranslate"><span class="pre">crs</span></code> is not declared the default will be set to EPSG 4326. EPSG 4326 is represented in decimal degrees while
+EPSG 3857 is represented in meters northing and meters easting. Other projections are not supported at this time</p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Example:</strong></dt><dd><p><code class="docutils literal notranslate"><span class="pre">band_manipulation(bbox=&quot;-11688123.519228712,4830113.564872338,-11687566.921774745,4830837.565406834,EPSG:3857&quot;,</span> <span class="pre">featureid='d330c2f9486b4b5b0798b142fd1e6388',</span> <span class="pre">band_combination=['R',</span> <span class="pre">'B',</span> <span class="pre">'G',</span> <span class="pre">'C'],</span> <span class="pre">download=True,</span> <span class="pre">outputpath=r'C:\Users\&lt;user&gt;\image.jpeg',</span> <span class="pre">crs='EPSG:3857')</span></code></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+</div></blockquote>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Maxar-OGC</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="image_search.html"><strong>Search</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="download_image.html"><strong>Download Image</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="metadata.html"><strong>Metadata</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="discover_browse.html"><strong>Discover Browse</strong></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#"><strong>Band_manipulation</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_usage.html"><strong>Code examples</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_usage.html#search"><em>Search</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_usage.html#download-image"><em>Download Image</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_usage.html#metadata"><em>Metadata</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_usage.html#band-manipulation"><em>Band Manipulation</em></a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_usage.html#discover-browse"><em>Discover Browse</em></a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="discover_browse.html" title="previous chapter"><strong>Discover Browse</strong></a></li>
+      <li>Next: <a href="sample_usage.html" title="next chapter"><strong>Code examples</strong></a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Maxar_GCS_Marianas.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/band_manipulation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
