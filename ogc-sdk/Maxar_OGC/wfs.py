@@ -1,5 +1,5 @@
 import requests
-import Maxar_OGC.process as process
+import ogc.process as process
 
 
 class WFS:
@@ -14,9 +14,11 @@ class WFS:
         """
         Function searches using the wfs method.
         Kwargs:
-            bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            bbox = String bounding box of AOI. Comma delimited set of coordinates.
+                (miny,minx,maxy,maxx) - Format used for EPSG:4326
+                (minx,miny,maxx,maxy,EPSG:3857) - Format used for EPSG:3857
             filter = CQL filter used to refine data of search.
-            crs = String of the Coordinate reference system used. Defaults to EPSG:4326.
+            srsname = String of the output format. Defaults to EPSG:4326.
             outputformat = String of the format of the response object. Defaults to json.
             featureprofile = String of the desired stacking profile. Defaults to account Default
         Returns:
@@ -27,8 +29,14 @@ class WFS:
         if 'filter' in keys:
             if 'bbox' in keys:
                 process._validate_bbox(kwargs['bbox'])
+                bbox_list = [i for i in kwargs['bbox'].split(',')]
+                if len(bbox_list) != 4:
+                    raise Exception('Only EPSG:4326 valid for filter')
+                coords = ','.join(bbox_list[:4])
+                process._validate_bbox(coords)
                 self._combine_bbox_and_filter(kwargs['filter'], kwargs['bbox'])
                 del(kwargs['filter'])
+                del(kwargs['bbox'])
             else:
                 self._parse_filter(kwargs['filter'])
                 del (kwargs['filter'])
@@ -52,7 +60,7 @@ class WFS:
         self.querystring.update({'cql_filter': filter})
 
     def _combine_bbox_and_filter(self, filter, bbox):
-        bbox_geometry = 'BBOX(geometry,{}'.format(bbox)
+        bbox_geometry = 'BBOX(geometry,{})'.format(bbox)
         combined_filter = bbox_geometry + 'AND' + filter
         self._parse_filter(combined_filter)
 

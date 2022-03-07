@@ -1,11 +1,12 @@
 import os
 
-from Maxar_OGC.auth import Auth
-from Maxar_OGC.wms import WMS
-from Maxar_OGC.wfs import WFS
-from Maxar_OGC.wmts import WMTS
-from Maxar_OGC.wcs import WCS
-import Maxar_OGC.process as process
+import ogc.process
+from ogc.auth import Auth
+from ogc.wms import WMS
+from ogc.wfs import WFS
+from ogc.wmts import WMTS
+from ogc.wcs import WCS
+import ogc.process as process
 import requests
 import warnings
 from multiprocessing.dummy import Pool as ThreadPool
@@ -76,11 +77,9 @@ class Interface:
             zoom_level = integer value of the zoom level. Used for WMTS
             download = boolean of user option to download band manipulation file locally.
             outputpath = String of output path must include output format. Downloaded path default is user home path.
-
-
         Kwargs:
-            featureid = String of the id of the image
             legacyid = String of the duc id to download the browse image
+            crs = String of the Coordinate reference system used. Defaults to EPSG:4326
         Returns:
             requests response object or downloaded file path
         """
@@ -158,8 +157,8 @@ class Interface:
             band_combination = List of strings containing the desired band combination of 1-4 items.
             download = boolean of user option to download band manipulation file locally.
         Kwargs:
-            filter = CQL filter used to refine data of search.
             outputpath = String of output path must include output format. Downloaded path default is user home path.
+            crs = String of the Coordinate reference system used. Defaults to EPSG:4326
         Returns:
             requests response object of the altered image
         """
@@ -325,5 +324,5 @@ class Interface:
 
         for key, value in response_times.items():
             output = os.path.join(output_location, key + ".{}".format(format))
-            Maxar_OGC.process.download_file(value, download_path=output)
+            ogc.process.download_file(value, download_path=output)
         return "Finished full image download process, output directory is: {}".format(os.path.split(output)[0])

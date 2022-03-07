@@ -1,7 +1,7 @@
 
 import requests
 import xml.etree.ElementTree as ET
-import Maxar_OGC.process as process
+import ogc.process as process
 
 
 class WMTS:
@@ -73,13 +73,22 @@ class WMTS:
         :return: List of WMTS calls.
         """
 
-        miny, minx, maxy, maxx = bbox.split(',')
-        if float(miny) > float(maxy) or float(minx) > float(maxx):
-            raise Exception('Invalid points min > max')
-        if 'projection' in kwargs.keys():
-            projection = kwargs['projection']
-        else:
+        process._validate_bbox(bbox)
+        bbox_list = [i for i in bbox.split(',')]
+        if len(bbox_list) == 4:
+            miny = float(bbox_list[0])
+            minx = float(bbox_list[1])
+            maxy = float(bbox_list[2])
+            maxx = float(bbox_list[3])
             projection = 'EPSG:4326'
+        else:
+            raise Exception('Must provide four coordinates in EPSG:4326')
+        # elif len(bbox_list) == 5:
+        #     minx = float(bbox_list[0])
+        #     miny = float(bbox_list[1])
+        #     maxx = float(bbox_list[2])
+        #     maxy = float(bbox_list[3])
+        #     projection = 'EPSG:3857'
 
         min_tilerow, min_tilecol = self.wmts_convert(zoom_level, projection, miny, minx)
         max_tilerow, max_tilecol = self.wmts_convert(zoom_level, projection, maxy, maxx)
