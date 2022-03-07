@@ -78,26 +78,57 @@ def _validate_bbox(bbox):
             bbox =  String of Coordinates separated by comma
             example = "-105.05608, 39.84387, -104.94827, 39.95133"
     """
-    try:
-        miny, minx, maxy, maxx = bbox.split(',')
-        miny = float(miny)
-        minx = float(minx)
-        maxy = float(maxy)
-        maxx = float(maxx)
-    except:
-        raise Exception('Bbox must have exactly 4 coordinates.')
-    bbox_data = {'min_y': miny, 'min_x': minx, 'max_y': maxy, 'max_x': maxx}
-    if bbox_data['min_y'] >= bbox_data['max_y']:
-        raise Exception("Improper order of bbox: min_y is greater than max_y.")
-    if bbox_data['min_x'] >= bbox_data['max_x']:
-        raise Exception("Improper order of bbox: min_x is greater than max_x.")
-    for key in bbox_data.keys():
-        if 'y' in key:
-            if bbox_data[key] > 90 or bbox_data[key] < -90:
-                raise Exception("Improper bbox parameter: {} coordinate outside of range -90:90.".format(key))
-        elif 'x' in key:
-            if bbox_data[key] > 180 or bbox_data[key] < -180:
-                raise Exception("Improper bbox parameter: {} coordinate outside of range -180:180.".format(key))
+    bbox_list = [i for i in bbox.split(',')]
+    if len(bbox_list) == 4:
+        try:
+            miny = float(bbox_list[0])
+            minx = float(bbox_list[1])
+            maxy = float(bbox_list[2])
+            maxx = float(bbox_list[3])
+        except:
+            raise Exception('Bbox coordiantes must be numeric.')
+        bbox_data = {'min_y': miny, 'min_x': minx, 'max_y': maxy, 'max_x': maxx}
+        if bbox_data['min_y'] >= bbox_data['max_y']:
+            raise Exception("Improper order of bbox: min_y is greater than max_y.")
+        if bbox_data['min_x'] >= bbox_data['max_x']:
+            raise Exception("Improper order of bbox: min_x is greater than max_x.")
+        for key in bbox_data.keys():
+            if 'y' in key:
+                if bbox_data[key] > 90 or bbox_data[key] < -90:
+                    raise Exception("Improper bbox parameter: {} coordinate outside of range -90:90.".format(key))
+            elif 'x' in key:
+                if bbox_data[key] > 180 or bbox_data[key] < -180:
+                    raise Exception("Improper bbox parameter: {} coordinate outside of range -180:180.".format(key))
+    elif len(bbox_list) == 5:
+        try:
+            minx = float(bbox_list[0])
+            miny = float(bbox_list[1])
+            maxx = float(bbox_list[2])
+            maxy = float(bbox_list[3])
+            if bbox_list[4][0] == ' ':
+                crs = bbox_list[4][1:]
+            else:
+                crs = bbox_list[4]
+        except:
+            raise Exception('Bbox coordinates must be numeric')
+        bbox_data = {'min_y': miny, 'min_x': minx, 'max_y': maxy, 'max_x': maxx}
+        if bbox_data['min_y'] >= bbox_data['max_y']:
+            raise Exception("Improper order of bbox: min_y is greater than max_y.")
+        if bbox_data['min_x'] >= bbox_data['max_x']:
+            raise Exception("Improper order of bbox: min_x is greater than max_x.")
+        for key in bbox_data.keys():
+            if 'y' in key:
+                if bbox_data[key] > 88985946 or bbox_data[key] < -88985946:
+                    raise Exception(
+                        "Improper bbox parameter: {} coordinate outside of range -88985946:88985946.".format(key))
+            elif 'x' in key:
+                if bbox_data[key] > 20037497 or bbox_data[key] < -20037497:
+                    raise Exception(
+                        "Improper bbox parameter: {} coordinate outside of range -20037497:20037497.".format(key))
+        if crs != 'EPSG:3857':
+            raise Exception("Projection must be EPSG:4326 (exactly 4 coordinates) or EPSG:3857 (4 coordinates plus 'EPSG:3857')")
+    else:
+        raise Exception("Projection must be EPSG:4326 (exactly 4 coordinates) or EPSG:3857 (4 coordinates plus 'EPSG:3857')")
 
 
 def download_file(response, format_response=None, download_path=None):

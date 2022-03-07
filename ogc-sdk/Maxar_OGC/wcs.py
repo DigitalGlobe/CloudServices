@@ -1,5 +1,5 @@
 import requests
-import Maxar_OGC.process as process
+import ogc.process as process
 from pathlib import Path
 
 
@@ -27,6 +27,7 @@ class WCS:
             featureprofile = String of the desired stacking profile. Defaults to account Default
         Returns:
             requests response object of desired image
+        Notes: Currently only works with EPSG:4326
         """
         self.querystring = self._init_querystring()
         keys = list(kwargs.keys())
