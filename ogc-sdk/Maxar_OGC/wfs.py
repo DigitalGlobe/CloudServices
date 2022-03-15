@@ -43,6 +43,7 @@ class WFS:
         elif 'bbox' in keys:
             process._validate_bbox(kwargs['bbox'])
             self._build_bbox(kwargs['bbox'])
+            del(kwargs['bbox'])
         else:
             raise Exception('Search function must have a BBOX or a Filter.')
         for key, value in kwargs.items():
@@ -61,6 +62,7 @@ class WFS:
 
     def _combine_bbox_and_filter(self, filter, bbox):
         bbox_geometry = 'BBOX(geometry,{})'.format(bbox)
+        combined_filter = bbox_geometry + 'AND' + '(' + filter + ')'
         combined_filter = bbox_geometry + 'AND' + filter
         self._parse_filter(combined_filter)
 
