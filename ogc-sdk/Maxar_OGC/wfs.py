@@ -63,7 +63,6 @@ class WFS:
     def _combine_bbox_and_filter(self, filter, bbox):
         bbox_geometry = 'BBOX(geometry,{})'.format(bbox)
         combined_filter = bbox_geometry + 'AND' + '(' + filter + ')'
-        combined_filter = bbox_geometry + 'AND' + filter
         self._parse_filter(combined_filter)
 
     def _build_bbox(self, bbox):
