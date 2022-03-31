@@ -8,6 +8,7 @@ class WFS:
         self.headers = session['headers']
         self.connect_id = session['connectid']
         self.response = None
+        self.version = session['version']
         self.querystring = self._init_querystring()
 
     def search(self, **kwargs):
@@ -77,7 +78,8 @@ class WFS:
                        'srsname': 'EPSG:4326',
                        'height': '3000',
                        'width': '3000',
-                       'outputformat': 'json'
+                       'outputformat': 'json',
+                       'SDKversion' : '{}'.format(self.version)
                        }
         return querystring
 

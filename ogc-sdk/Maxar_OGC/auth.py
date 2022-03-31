@@ -21,6 +21,7 @@ class Auth:
         self.connect_id = connectid
         self.username = username
         self.password = password
+        self.version = '0.1.14'
 
         if not self.base_url:
             dir_path = os.path.expanduser('~')
@@ -68,7 +69,7 @@ class Auth:
         if (not self.username and self.password) or (not self.password and self.username):
             raise Exception('Username and Password must both be provided.')
 
-        url = "{}catalogservice/wfsaccess/Site24x7?" \
+        url = "{}catalogservice/wfsaccess?" \
               "REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0&CONNECTID={}".format(host, connectid)
         response = requests.request("GET", url, headers=headers, data={})
         if response.status_code != 200:
@@ -77,7 +78,8 @@ class Auth:
     def _get_session(self):
         header = {}
         session = {'base_url': self.base_url,
-                   'connectid': self.connect_id}
+                   'connectid': self.connect_id,
+                   'version': self.version}
         if self.username and self.password:
             header.update({'Authorization': 'Basic {}'.format(self._encode_creds())})
         session.update({'headers': header})

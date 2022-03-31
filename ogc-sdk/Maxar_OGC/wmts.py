@@ -10,6 +10,7 @@ class WMTS:
         self.headers = session['headers']
         self.connect_id = session['connectid']
         self.response = None
+        self.version = session['version']
         self.querystring = self._init_querystring()
 
     def wmts_convert(self, zoom_level, projection, laty, longx):
@@ -120,7 +121,8 @@ class WMTS:
                        'version': '1.0.0',
                        'TileMatrixSet': 'EPSG:4326',
                        'Layer': 'DigitalGlobe:ImageryTileService',
-                       'Format': 'image/jpeg'
+                       'Format': 'image/jpeg',
+                       'SDKversion': '{}'.format(self.version)
                        }
         return querystring
 

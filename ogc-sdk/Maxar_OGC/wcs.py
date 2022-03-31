@@ -10,6 +10,7 @@ class WCS:
         self.headers = session['headers']
         self.connect_id = session['connectid']
         self.response = None
+        self.version = session['version']
         self.querystring = self._init_querystring()
 
 
@@ -66,7 +67,8 @@ class WCS:
                        'request': 'GetCoverage',
                        'version': '1.3.0',
                        'gridcrs': 'urn:ogc:def:crs:EPSG::4326',
-                       'format': 'image/jpeg'
+                       'format': 'image/jpeg',
+                       'SDKversion': '{}'.format(self.version)
                        }
         return querystring
     def parse_coverage(self, coverage):

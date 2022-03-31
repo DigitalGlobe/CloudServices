@@ -9,6 +9,7 @@ class WMS:
         self.headers = session['headers']
         self.connect_id = session['connectid']
         self.response = None
+        self.version = session['version']
         self.querystring = self._init_querystring()
 
 
@@ -62,6 +63,7 @@ class WMS:
                        'height': '512',
                        'width': '512',
                        'layers': 'DigitalGlobe:Imagery',
-                       'format': 'image/jpeg'
+                       'format': 'image/jpeg',
+                       'SDKversion': '{}'.format(self.version)
                        }
         return querystring
