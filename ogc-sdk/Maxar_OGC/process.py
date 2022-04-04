@@ -2,6 +2,8 @@ import os
 import pyproj
 import shapely.ops as ops
 from shapely.geometry.polygon import Polygon
+import shapely.geometry
+import shapely.wkt
 from functools import partial
 import random
 import string
@@ -136,6 +138,7 @@ def download_file(response, format_response=None, download_path=None):
         filename = download_path
     else:
         filename = 'Download.' + format_response
+        filename = os.path.join(os.getcwd(), filename)
     if os.path.isfile(filename):
         while os.path.isfile(filename):
             filename = filename.split('.')[0] + '_dup' + '.' + filename.split('.')[1]
@@ -151,3 +154,28 @@ def _remove_cache(querystring):
     random_characters2 = ''.join(i for i in random.choices(pool_list, k=25))
     querystring.update({random_characters1:random_characters2})
     return querystring
+
+def aoi_coverage(bbox, response):
+    """
+    Function adds the percentage of the desired feature that is covered by the AOI
+    :param bbox: String of Coordinates separated by comma
+    :param response: Response object from a WFS request call
+    :return: Updated dictionary of the json object
+    """
+
+    coverage = response.json()
+    box_order = bbox.split(',')
+    aoi_polygon = shapely.geometry.box(
+        *(float(box_order[1]), float(box_order[0]), float(box_order[3]), float(box_order[2])), ccw=True)
+    for feature in coverage['features']:
+        if feature['geometry']['type'] == 'Polygon':
+            feature_wkt = shapely.wkt.loads("POLYGON (({}))".format(
+                ", ".join([" ".join([str(k) for k in i]) for i in feature['geometry']['coordinates'][0]])))
+            feature['coverage'] = aoi_polygon.intersection(feature_wkt).area / feature_wkt.area
+        else:
+            feature_wkt = shapely.wkt.loads("MULTIPOLYGON ({})".format(", ".join(
+                ["(({}))".format(", ".join([" ".join([str(k) for k in i]) for i in l[0]])) for l in
+                 feature['geometry']['coordinates']])))
+            feature['coverage'] = aoi_polygon.intersection(feature_wkt).area / feature_wkt.area
+
+    return coverage

@@ -57,10 +57,29 @@ class Interface:
             Response object of the search
         """
         result = self.wfs.search(**kwargs)
-        if "outputformat" not in kwargs.keys():
-            return result.json()
+        if 'bbox' in kwargs.keys():
+            if 'outputformat' in kwargs.keys():
+                if kwargs['outputformat'] != 'shape-zip':
+                    result = process.aoi_coverage(kwargs['bbox'], result)
+                    return result
+                else:
+                    return process.download_file(result, format_response='shp')
+            else:
+                result =  process.aoi_coverage(kwargs['bbox'], result)
+                return result
         else:
-            return result.text
+            if 'outputformat' in kwargs.keys():
+                if kwargs['outputformat'] == 'shape-zip':
+                    return process.download_file(result, format_response='shp')
+                else:
+                    return result
+            else:
+                return result.json()
+
+#        if "outputformat" not in kwargs.keys():
+#            return result.json()
+#        else:
+#            return result.text
 
     def download_image(self, bbox=None, height=None, width=None, img_format=None, identifier=None,
                        gridoffsets=None, zoom_level=None, download=True, outputpath=None, display=True,
