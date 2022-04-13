@@ -19,3 +19,7 @@ except:
   sw_ogc = Interface('https://securewatch.maxar.com/','<connect_id>') # if .ogc-config was not created
 print(help(sw_ogc))
 ```
+# Documentation
+Documentation site: https://cloudservices.readthedocs.io/en/latest/index.html
+
+PyPi site: https://pypi.org/project/Maxar-OGC/
