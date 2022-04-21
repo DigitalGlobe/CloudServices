@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/band_manipulation/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/discover_browse/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/download_browse_image/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/download_image/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/download_image_featureid/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/download_image_pixel_count/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/download_tiles/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/image_search/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>None</loc>
+         <loc>https://cloudservices.readthedocs.io/en/latest/metadata/</loc>
          <lastmod>2022-04-21</lastmod>
          <changefreq>daily</changefreq>
     </url>
