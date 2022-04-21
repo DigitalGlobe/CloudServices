@@ -1,4 +1,6 @@
 site_name: Maxar-OGC Docs
+repo_url: https://github.com/DigitalGlobe/CloudServices
+edit_uri: blob/master/docs
 
 nav:
     - Home: 'index.md'
