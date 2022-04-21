@@ -1,4 +1,5 @@
 site_name: Maxar-OGC Docs
+site_url: https://cloudservices.readthedocs.io/en/latest/
 repo_url: https://github.com/DigitalGlobe/CloudServices
 edit_uri: blob/master/docs
 
