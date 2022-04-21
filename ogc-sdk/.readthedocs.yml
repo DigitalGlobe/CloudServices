@@ -8,6 +8,11 @@ version: 2
 # Build documentation with MkDocs
 #mkdocs:
 #  configuration: mkdocs.yml
+python:
+  version: "3.6"
+  install:
+    - requirements: requirements.txt
+
 mkdocs:
   configuration: mkdocs.yml
   fail_on_warning: false
