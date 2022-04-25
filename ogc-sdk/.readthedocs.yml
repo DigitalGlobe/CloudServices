@@ -11,11 +11,14 @@ version: 2
 python:
   version: "3.6"
   install:
-    - requirements: docs/requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+      - requirements: docs/requirements.txt
 
 mkdocs:
   configuration: mkdocs.yml
   fail_on_warning: false
 
 # Optionally build your docs in additional formats such as PDF and ePub
-formats: all
+formats: []
