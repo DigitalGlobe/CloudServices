@@ -1,5 +1,5 @@
 name: docs
 dependencies:
   - pip:
-    - jinja2==3.0.3
+    - Jinja2==3.0.3
     - mkdocs==1.3.0
