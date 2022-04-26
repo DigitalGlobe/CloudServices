@@ -14,7 +14,7 @@ python:
     - method: pip
       path: .
       extra_requirements:
-      - requirements: docs/requirements.txt
+        - docs/requirements.txt
 
 mkdocs:
   configuration: mkdocs.yml
