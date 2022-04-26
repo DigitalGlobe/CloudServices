@@ -8,6 +8,12 @@ version: 2
 # Build documentation with MkDocs
 #mkdocs:
 #  configuration: mkdocs.yml
+build:
+  tools:
+    python: "3.6"
+    install:
+      - requirements: docs/requirements.txt 
+
 python:
   version: "3.6"
   install:
