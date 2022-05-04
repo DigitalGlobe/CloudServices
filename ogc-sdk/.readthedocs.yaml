@@ -10,7 +10,7 @@ version: 2
 #  configuration: mkdocs.yml
 build:
   tools:
-    python: "3.6"
+    python: "3.8"
 
 
 mkdocs:
