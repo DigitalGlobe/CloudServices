@@ -13,4 +13,4 @@ nav:
     - 'discover_browse.md'
     - 'band_manipulation.md'
 
-docs_dir: ./docs
+#docs_dir: ./docs
