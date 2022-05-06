@@ -1,0 +1,4 @@
+#docs/requirements
+mkdocs==1.2.2
+mkdocs-material==7.2.0
+Jinja2==3.0.3
