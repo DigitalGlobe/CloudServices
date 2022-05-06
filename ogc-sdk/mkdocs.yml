@@ -13,3 +13,5 @@ nav:
         - 'download_tiles.md'
     - 'discover_browse.md'
     - 'band_manipulation.md'
+
+docs_dir: docs
