@@ -1,5 +1,5 @@
 import requests
-import ogc.process as process
+import Maxar_OGC.process as process
 
 
 

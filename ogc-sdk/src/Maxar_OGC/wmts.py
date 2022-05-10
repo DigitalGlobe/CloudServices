@@ -1,7 +1,7 @@
 
 import requests
 import xml.etree.ElementTree as ET
-import ogc.process as process
+import Maxar_OGC.process as process
 
 
 class WMTS:

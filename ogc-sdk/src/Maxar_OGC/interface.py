@@ -1,12 +1,12 @@
 import os
 
-import ogc.process
-from ogc.auth import Auth
-from ogc.wms import WMS
-from ogc.wfs import WFS
-from ogc.wmts import WMTS
-from ogc.wcs import WCS
-import ogc.process as process
+import Maxar_OGC.process
+from Maxar_OGC.auth import Auth
+from Maxar_OGC.wms import WMS
+from Maxar_OGC.wfs import WFS
+from Maxar_OGC.wmts import WMTS
+from Maxar_OGC.wcs import WCS
+import Maxar_OGC.process as process
 import requests
 import warnings
 from multiprocessing.dummy import Pool as ThreadPool

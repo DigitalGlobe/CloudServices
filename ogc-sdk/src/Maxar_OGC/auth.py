@@ -21,7 +21,7 @@ class Auth:
         self.connect_id = connectid
         self.username = username
         self.password = password
-        self.version = '0.1.14'
+        self.version = '0.1.18'
 
         if not self.base_url:
             dir_path = os.path.expanduser('~')
