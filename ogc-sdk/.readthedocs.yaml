@@ -15,12 +15,8 @@ mkdocs:
   fail_on_warning: false
 
 python:
-  version: "3.6"
   install:
-    - method: pip
-      path: .
-      extra_requirements:
-      - requirements: .\ogc-sdk\docs\requirements.txt
+    - requirements: .\ogc-sdk\docs\requirements.txt
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: []
