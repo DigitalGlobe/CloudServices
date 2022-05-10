@@ -8,9 +8,6 @@ version: 2
 # Build documentation with MkDocs
 #mkdocs:
 #  configuration: mkdocs.yml
-build:
-  tools:
-    python: "3.6"
 
 
 mkdocs:
@@ -18,8 +15,12 @@ mkdocs:
   fail_on_warning: false
 
 python:
+  version: "3.6"
   install:
-    - requirements: ogc-sdk\docs\requirements.txt
+    - method: pip
+      path: .
+      extra_requirements:
+      - requirements: ogc-sdk\docs\requirements.txt
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: []
