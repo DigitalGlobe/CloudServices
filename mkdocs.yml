@@ -13,5 +13,3 @@ nav:
     - 'discover_browse.md'
     - 'band_manipulation.md'
 
-docs_dir: .\ogc-sdk\docs
-site_dir: .\ogc-sdk\_build
