@@ -10,16 +10,16 @@ version: 2
 #  configuration: mkdocs.yml
 build:
   tools:
-    python: "3.8"
+    python: "3.6"
 
 
 mkdocs:
-  configuration: mkdocs.yml
+  configuration: ogc-sdk\mkdocs.yml
   fail_on_warning: false
 
 python:
   install:
-    - requirements: requirements.txt
+    - requirements: ogc-sdk\docs\requirements.txt
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: []
