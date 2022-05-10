@@ -1,4 +1,0 @@
-name: docs
-dependencies:
-  - pip:
-    - Jinja2==3.0.3
