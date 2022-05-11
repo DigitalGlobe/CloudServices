@@ -10,8 +10,9 @@ nav:
         - 'download_image_featureid.md'
         - 'download_image_pixel_count.md'
         - 'download_tiles.md'
-    - 'discover_browse.md'
-    - 'band_manipulation.md'
+    - 'Misc':
+        - 'discover_browse.md'
+        - 'band_manipulation.md'
 
 docs_dir: './ogc-sdk/docs'
 site_dir: './ogc-sdk/site'
