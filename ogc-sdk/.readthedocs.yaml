@@ -9,9 +9,8 @@ version: 2
 #mkdocs:
 #  configuration: mkdocs.yml
 
-
 mkdocs:
-  configuration: .\mkdocs.yml
+  configuration: ogc-sdk\mkdocs.yml
   fail_on_warning: false
 
 python:
@@ -20,7 +19,7 @@ python:
     - method: pip
       path: .
       extra_requirements:
-      - requirements: .\docs\requirements.txt
+      - requirements: ogc-sdk\docs\requirements.txt
 
 # Optionally build your docs in additional formats such as PDF and ePub
 formats: []

@@ -13,5 +13,5 @@ nav:
     - 'discover_browse.md'
     - 'band_manipulation.md'
 
-docs_dir: 'docs'
-site_dir: 'site'
+docs_dir: 'ogc-sdk\docs'
+site_dir: 'ogc-sdk\site'
