@@ -47,15 +47,26 @@ Args that can be passed in:
    
      band_combination=['R', 'B', 'G', 'C']
 
-## download (bool)
+##height(int)
 
-  The ``download`` is a boolean of whether or not the desired image should be downloaded. Defaults to ``True``
+  Desired image ``height`` in pixels. Maximum is 8000.
+
+   **Example:**
+     ``download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512)``
+##width (int)
+
+  Desired image ``width`` in pixels. Maximum is 8000.
+
+   **Example:**
+     ``download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512)``
+
+##img_format
+
+  The ``img_format`` is the desired format of the returned object. Available options include **jpeg**, **png**, or **geotiff**
 
    **Example:**
    
-     download=True
-
-Kwargs that can be passed in:
+     band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512, img_format='png')
 
 ## outputpath (str)
 

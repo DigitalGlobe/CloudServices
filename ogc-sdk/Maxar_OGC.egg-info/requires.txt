@@ -1,4 +1,0 @@
-pyproj
-shapely
-requests
-ipython
