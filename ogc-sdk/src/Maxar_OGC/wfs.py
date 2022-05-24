@@ -11,19 +11,24 @@ class WFS:
         self.version = session['version']
         self.querystring = self._init_querystring()
 
-    def search(self, **kwargs):
+    def search(self, typename='FinishedFeature', **kwargs):
         """
         Function searches using the wfs method.
+        Args:
+            typename = String of the typename. Defaults to 'FinishedFeature'. Example input 'MaxarCatalogMosaicProducts'
         Kwargs:
             bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             filter = CQL filter used to refine data of search.
             outputformat = String of the format of the response object. Defaults to json.
             featureprofile = String of the desired stacking profile. Defaults to account Default
+            typename = String of the typename. Defaults to FinishedFeature. Example input MaxarCatalogMosaicProducts
         Returns:
             Response object of the search
         """
 
         self.querystring = self._init_querystring()
+        process._check_typeName(typename)
+        self.querystring.update({'typename': 'DigitalGlobe:{}'.format(typename)})
         keys = list(kwargs.keys())
         if 'filter' in keys and kwargs['filter']:
             if 'bbox' in keys and kwargs['bbox']:
@@ -33,7 +38,7 @@ class WFS:
                     raise Exception('Only EPSG:4326 valid for filter')
                 coords = ','.join(bbox_list[:4])
                 process._validate_bbox(coords)
-                self._combine_bbox_and_filter(kwargs['filter'], kwargs['bbox'])
+                self._combine_bbox_and_filter(kwargs['filter'], kwargs['bbox'], typename)
                 del(kwargs['filter'])
                 del(kwargs['bbox'])
             else:
@@ -53,9 +58,14 @@ class WFS:
         self.response = request
         return process._response_handler(self.response)
 
-    def _combine_bbox_and_filter(self, filter, bbox):
-        bbox_geometry = 'BBOX(geometry,{})'.format(bbox)
-        combined_filter = bbox_geometry + 'AND' + '(' + filter + ')'
+    def _combine_bbox_and_filter(self, filter, bbox, typename):
+
+        if 'MaxarCatalogMosaic' in typename:
+            bbox_geometry = 'BBOX(shape,{})'.format(bbox)
+            combined_filter = bbox_geometry + 'AND' + '(' + filter + ')'
+        else:
+            bbox_geometry = 'BBOX(geometry,{})'.format(bbox)
+            combined_filter = bbox_geometry + 'AND' + '(' + filter + ')'
         self.querystring.update({'cql_filter': filter})
         self.querystring.update({'cql_filter': combined_filter})
 

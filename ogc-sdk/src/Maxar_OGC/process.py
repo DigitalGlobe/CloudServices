@@ -7,6 +7,9 @@ import shapely.wkt
 from functools import partial
 import random
 import string
+import queue
+from concurrent.futures import ThreadPoolExecutor
+
 
 
 def _response_handler(response):
@@ -193,3 +196,15 @@ def _check_image_format(img_format):
         return 'image/' + img_format
     else:
         raise Exception('Format not recognized, please use acceptable format for downloading image.')
+
+def _check_typeName(typename):
+    acceptable_types = ['FinishedFeature', 'TileMatrixFeature', 'ImageInMosaicFeature', 'MaxarCatalogMosaicProducts',
+                        'MaxarCatalogMosaicSeamlines', 'MaxarCatalogMosaicTiles']
+    if typename not in acceptable_types:
+        raise Exception('{} is not an acceptable TypeName. Please use one of the following {}'.format(typename, acceptable_types))
+
+class BoundedThreadPoolExecutor(ThreadPoolExecutor):
+
+    def __init__(self, *args, **kwargs):
+        super(BoundedThreadPoolExecutor, self).__init__(*args, **kwargs)
+        self._work_queue = queue.Queue()

@@ -8,7 +8,9 @@ from Maxar_OGC.wcs import WCS
 import Maxar_OGC.process as process
 import requests
 import warnings
-from multiprocessing.dummy import Pool as ThreadPool
+import queue
+import concurrent.futures
+from concurrent.futures import as_completed
 import sys
 warnings.filterwarnings("ignore")
 
@@ -52,6 +54,7 @@ class Interface:
             shapefile = Binary of whether or not to return as shapefile format
         Kwargs:
             featureprofile = String of the desired stacking profile. Defaults to account Default
+            typename = String of the typename. Defaults to FinishedFeature. Example input MaxarCatalogMosaicProducts
         Returns:
             Response is either a list of features or a shapefile of all features and associated metdata.
         """
@@ -66,6 +69,7 @@ class Interface:
             else:
                 result = process.aoi_coverage(bbox, result)
                 return result['features']
+
         else:
             if shapefile:
                 return process.download_file(result, format_response='zip')
@@ -206,7 +210,8 @@ class Interface:
                 f.write(response.content)
         return "Download complete, files are located in {}".format(base_file)
 
-    def download_image_with_feature_id(self, bbox, identifier, gridoffsets, img_format='jpeg', outputpath=None):
+    def download_image_with_feature_id(self, bbox, identifier, gridoffsets, img_format='jpeg', display=True,
+                                        outputpath=None):
         """
         Function downloads the image and metadata of desired feature id
         Args:
@@ -221,6 +226,9 @@ class Interface:
 
         process._check_image_format(img_format)
         result = self.wcs.return_image(bbox, identifier, gridoffsets)
+        
+        if display:
+            process._display_image(result)
 
         if outputpath:
             file_name = process.download_file(result, download_path=outputpath)
@@ -250,9 +258,9 @@ class Interface:
 
         img_formatted = process._check_image_format(img_format)
         process._validate_bbox(bbox)
-        if width < 0 or width > 8000:
+        if width <= 0 or width > 8000:
             raise Exception("Invalid value for width parameter (max 8000)")
-        if height < 0 or height > 8000:
+        if height <= 0 or height > 8000:
             raise Exception("Invalid value for height parameter (max 8000)")
         result = self.wms.return_image(bbox=bbox, format=img_formatted, height=height, width=width, **kwargs)
         if display:
@@ -264,15 +272,17 @@ class Interface:
             file_name = process.download_file(result, format_response=img_format)
         return f"Downloaded file {file_name}"
 
-    def band_manipulation(self, bbox, featureid, band_combination, height=256, width=256, img_format='jpeg',
-                          download=True, outputpath=None):
+    def band_manipulation(self, bbox, featureid, band_combination, height=256, width=256, img_format='jpeg', display=True,
+                            outputpath=None):
         """
         Function changes the bands of the feature id passed in.
         Args:
             bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             featureid = String of the id of the image
             band_combination = List of strings containing the desired band combination of 1-4 items.
-            download = boolean of user option to download band manipulation file locally.
+            height: Integer value representing the vertical number of pixels to return
+            width: Integer value representing the horizontal number of pixels to return
+            image_format: String value of the file type that you want downloaded.
             outputpath = String of output path must include output format. Downloaded path default is user home path.
         Returns:
             requests response object of the altered image
@@ -289,13 +299,13 @@ class Interface:
         area = process.area_sqkm(bbox)
         return area
 
-    def get_full_res_image(self, featureid, thread_percentage=6, thread_number=100, bbox=None, **kwargs):
+    def get_full_res_image(self, featureid, thread_number=100, bbox=None, **kwargs):
         """
         Function takes in a feature id and breaks the image up into 1024x1024 tiles, then places a number of calls
         based on multithreading percentages to return a full image strip in multiple tiles
         Args:
             featureid = String of the id of the image
-            thread_percentage = int: whole percent of threads given to multithread functionality
+            thread_percentage = int: percentage of total tiles returned per thread
             thread_number = int: number of threads given to multithread functionality
             bbox = String of the aoi coordinates in crs EPSG:4326
         kwargs:
@@ -313,9 +323,9 @@ class Interface:
         y_coords = [y[1] for y in image_bbox]
 
         miny = min(y_coords)
-        maxy = max(y_coords)
+        maxy = max(y_coords) + 0.0042176
         minx = min(x_coords)
-        maxx = max(x_coords)
+        maxx = max(x_coords) + 0.0054932
 
         if bbox:
             bbox_order = bbox.split(',')
@@ -333,10 +343,31 @@ class Interface:
             x_list.append(minx)
             minx += 0.0054932
         tiles = {}
-        for y in reversed(range(len(y_list) - 1)):
-            for x in range(len(x_list) - 1):
-                tiles['c{}_r{}'.format(x,len(y_list)-y-2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
-                                                                       y_list[y + 1], x_list[x + 1])
+
+        if len(y_list) == 1:
+            if len(x_list) == 1:
+                tiles['c{}_r{}'.format(0, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[0],
+                                                                       y_list[0] + 0.0042176, x_list[0] + 0.0054932)
+            else:
+                for x in range(len(x_list) - 1):
+                    tiles['c{}_r{}'.format(x, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[x], y_list[0] + 0.0042176,
+                                                                            x_list[x + 1])
+        elif len(x_list) == 1:
+            for y in reversed(range(len(y_list) - 1)):
+                tiles['c{}_r{}'.format(0, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[0],
+                                                                                          y_list[y + 1],
+                                                                                          x_list[0] + 0.0054932)
+        else:
+            for y in reversed(range(len(y_list) - 1)):
+                for x in range(len(x_list) - 1):
+                    tiles['c{}_r{}'.format(x, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
+                                                                                              y_list[y + 1],
+                                                                                              x_list[x + 1])
+        # Original
+        # for y in reversed(range(len(y_list) - 1)):
+        #     for x in range(len(x_list) - 1):
+        #         tiles['c{}_r{}'.format(x,len(y_list)-y-2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
+        #                                                                y_list[y + 1], x_list[x + 1])
 
         print("Started full image download process...")
 
@@ -352,6 +383,14 @@ class Interface:
         else:
             format = querstring['format'][6:]
         response_times = {}
+
+        def response_thread(coord_list):
+            sub_bbox, sub_grid_cell_location = coord_list.split("|")
+            sub_query = querstring.copy()
+            sub_query['bbox'] = sub_bbox
+            sub_response = requests.request("GET", url, params=sub_query, headers=headers)
+            return [sub_grid_cell_location, sub_response]
+
 
         def task_to_run(coord_list):
             """
@@ -376,10 +415,6 @@ class Interface:
                 sys.stdout.write('{}'.format('.' * total_image))
                 sys.stdout.write('\r')
 
-        div = len(tiles) * (0.01 * thread_percentage)
-        num = int(div) + 1
-        if num > thread_number:
-            num = thread_number
         multithreading_array = ["{}|{}".format(k, j) for j, k in list(tiles.items())]
         if 'outputdirectory' not in kwargs.keys():
             outputdirectory = os.path.expanduser('~')
@@ -390,18 +425,26 @@ class Interface:
             for line in multithreading_array:
                 value, key = line.split('|')
                 grid_coords.write('{} | {}\n'.format(key, value))
-        pool = ThreadPool(num)
-        results = pool.map(task_to_run, multithreading_array)
-        pool.close()
-        pool.join()
+
+        chunk_size = thread_number * 5
+        chunk_count = int(len(multithreading_array)/chunk_size)
+        for i in range(chunk_count + 1):
+            if i == chunk_count:
+                sub_array = multithreading_array[i*chunk_size:]
+            else:
+                sub_array = multithreading_array[i*chunk_size:(i+1)*chunk_size]
+            with process.BoundedThreadPoolExecutor(max_workers=thread_number) as executor:
+                futures = [executor.submit(response_thread, coords) for coords in sub_array]
+                for future in as_completed(futures):
+                    coord, response = future.result()
+                    sub_output = os.path.join(outputdirectory, coord + ".{}".format(format))
+                    process.download_file(response, download_path=sub_output)
+
         sys.stdout.write('\r')
         print('\n')
         sys.stdout.write('Finished raw download')
 
-        for key, value in response_times.items():
-            output = os.path.join(outputdirectory, key + ".{}".format(format))
-            process.download_file(value, download_path=output)
-        return "Finished full image download process, output directory is: {}".format(os.path.split(output)[0])
+        return "Finished full image download process, output directory is: {}".format(os.path.split(outputdirectory)[0])
 
     def _band_check(self, featureid, band_combination):
         """
