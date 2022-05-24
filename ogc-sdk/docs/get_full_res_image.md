@@ -7,15 +7,15 @@ Args that can be passed in:
 
   The featureid is the online id of the desired image feature
    **Example:**
-     get_full_res_image(featureid='57d0e26239dde11463d31ff0893ce9ca', outputdirectory=self.pwd) )
+     get_full_res_image(featureid=`featureid/catalogid`, outputdirectory=self.pwd) )
 	 
-## thread_percentage (int)
+## thread_number (int)
 
-  The thread_percentage percentage of total tiles returned per thread. Add more about threading. Possibly hardcoding this. 
+  The number of threads used in the download process. More threads will generally go faster but use more system resources. Defaults to 100 threads.
 
    **Example:**
    
-     download_browse_image(input_id=`featureid/catalogid`, img_format='png')
+     get_full_res_image(input_id=`featureid/catalogid`, thread_number=200)
 	 
 ## bbox (str) (required)
 
@@ -41,4 +41,4 @@ Args that can be passed in:
   The img_format is the desired format of the returned object. Available options include **jpeg**, **png**, or **geotiff**
 
    **Example:**
-     download_image_by_pixel_count(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512", img_format='png')
+     get_full_res_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", img_format='jpeg')
