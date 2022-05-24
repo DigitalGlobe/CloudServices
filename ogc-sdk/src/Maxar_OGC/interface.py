@@ -12,6 +12,7 @@ import queue
 import concurrent.futures
 from concurrent.futures import as_completed
 import sys
+
 warnings.filterwarnings("ignore")
 
 
@@ -24,6 +25,7 @@ class Interface:
         username = String of the username if your connectId requires Auth
         Password = String of the password associated with your username
     """
+
     def __init__(self, *args):
         if len(args) > 0:
             try:
@@ -211,7 +213,7 @@ class Interface:
         return "Download complete, files are located in {}".format(base_file)
 
     def download_image_with_feature_id(self, bbox, identifier, gridoffsets, img_format='jpeg', display=True,
-                                        outputpath=None):
+                                       outputpath=None):
         """
         Function downloads the image and metadata of desired feature id
         Args:
@@ -226,7 +228,7 @@ class Interface:
 
         process._check_image_format(img_format)
         result = self.wcs.return_image(bbox, identifier, gridoffsets)
-        
+
         if display:
             process._display_image(result)
 
@@ -272,8 +274,9 @@ class Interface:
             file_name = process.download_file(result, format_response=img_format)
         return f"Downloaded file {file_name}"
 
-    def band_manipulation(self, bbox, featureid, band_combination, height=256, width=256, img_format='jpeg', display=True,
-                            outputpath=None):
+    def band_manipulation(self, bbox, featureid, band_combination, height=256, width=256, img_format='jpeg',
+                          display=True,
+                          outputpath=None):
         """
         Function changes the bands of the feature id passed in.
         Args:
@@ -290,7 +293,8 @@ class Interface:
 
         band_string = self._band_check(featureid, band_combination)
         feature_id_filter = "featureId='{}'".format(featureid)
-        message = self.download_image_by_pixel_count(bbox, height, width, img_format, outputpath=outputpath, display=False,
+        message = self.download_image_by_pixel_count(bbox, height, width, img_format, outputpath=outputpath,
+                                                     display=display,
                                                      filter=feature_id_filter, bands=band_string)
         return message
 
@@ -347,7 +351,7 @@ class Interface:
         if len(y_list) == 1:
             if len(x_list) == 1:
                 tiles['c{}_r{}'.format(0, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[0],
-                                                                       y_list[0] + 0.0042176, x_list[0] + 0.0054932)
+                                                                        y_list[0] + 0.0042176, x_list[0] + 0.0054932)
             else:
                 for x in range(len(x_list) - 1):
                     tiles['c{}_r{}'.format(x, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[x], y_list[0] + 0.0042176,
@@ -391,7 +395,6 @@ class Interface:
             sub_response = requests.request("GET", url, params=sub_query, headers=headers)
             return [sub_grid_cell_location, sub_response]
 
-
         def task_to_run(coord_list):
             """
             Function multithreads requests to speed up image return process
@@ -427,22 +430,22 @@ class Interface:
                 grid_coords.write('{} | {}\n'.format(key, value))
 
         chunk_size = thread_number * 5
-        chunk_count = int(len(multithreading_array)/chunk_size)
+        chunk_count = int(len(multithreading_array) / chunk_size)
         for i in range(chunk_count + 1):
             if i == chunk_count:
-                sub_array = multithreading_array[i*chunk_size:]
+                sub_array = multithreading_array[i * chunk_size:]
             else:
-                sub_array = multithreading_array[i*chunk_size:(i+1)*chunk_size]
+                sub_array = multithreading_array[i * chunk_size:(i + 1) * chunk_size]
             with process.BoundedThreadPoolExecutor(max_workers=thread_number) as executor:
                 futures = [executor.submit(response_thread, coords) for coords in sub_array]
                 for future in as_completed(futures):
                     coord, response = future.result()
                     sub_output = os.path.join(outputdirectory, coord + ".{}".format(format))
                     process.download_file(response, download_path=sub_output)
-
+            sys.stdout.write('Finished section {} out of {}'.format(i+1, chunk_count+1))
+            sys.stdout.write('\r')
         sys.stdout.write('\r')
         print('\n')
-        sys.stdout.write('Finished raw download')
 
         return "Finished full image download process, output directory is: {}".format(os.path.split(outputdirectory)[0])
 
