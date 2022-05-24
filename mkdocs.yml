@@ -10,6 +10,7 @@ nav:
         - 'download_image_featureid.md'
         - 'download_image_pixel_count.md'
         - 'download_tiles.md'
+        - 'get_full_res_image.md'
     - 'Misc':
         - 'discover_browse.md'
         - 'band_manipulation.md'
