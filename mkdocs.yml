@@ -22,7 +22,7 @@ theme:
   name: material
   logo: maxar_gold_logo_rgb_250.png
   favicon: favicon.ico
-  custom_dir: docs/stylesheets
+  custom_dir: './ogc-sdk/docs/stylesheets'
 extra_css: 
     - stylesheets/extra.css
 
