@@ -14,6 +14,20 @@ nav:
     - 'Misc':
         - 'discover_browse.md'
         - 'band_manipulation.md'
+        - 'create_mosaic.md'
+        - 'cli_commands.md'
 
 docs_dir: './ogc-sdk/docs'
 site_dir: './ogc-sdk/site'
+theme:
+  name: material
+  logo: maxar_gold_logo_rgb_250.png
+  favicon: favicon.ico
+  custom_dir: docs/stylesheets
+extra_css: 
+    - stylesheets/extra.css
+docs_dir: 
+    - './ogc-sdk/docs'
+site_dir: 
+    - './ogc-sdk/site'
+

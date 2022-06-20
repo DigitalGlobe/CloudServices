@@ -12,6 +12,8 @@ import queue
 import concurrent.futures
 from concurrent.futures import as_completed
 import sys
+from PIL import Image
+
 
 warnings.filterwarnings("ignore")
 
@@ -20,10 +22,10 @@ class Interface:
     """
     The primary interface for interacting with the WMS and WFS OGC classes.
     Args:
-        base_url = String of the url that you are using ex. 'https://securewatch.digitalglobe.com/'
-        connect_id = String of the connectId tied to your account
-        username = String of the username if your connectId requires Auth
-        Password = String of the password associated with your username
+        base_url (string) = The url that you are using ex. 'https://securewatch.digitalglobe.com/'
+        connect_id (string) = The connectId tied to your account
+        username (string) = The username if your connectId requires Auth
+        password (string) = The password associated with your username
     """
 
     def __init__(self, *args):
@@ -51,12 +53,13 @@ class Interface:
         """
         Function searches using the wfs method.
         Args:
-            bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            filter = CQL filter used to refine data of search.
-            shapefile = Binary of whether or not to return as shapefile format
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            filter (string) = CQL filter used to refine data of search.
+            shapefile (bool) = Binary of whether or not to return as shapefile format
         Kwargs:
-            featureprofile = String of the desired stacking profile. Defaults to account Default
-            typename = String of the typename. Defaults to FinishedFeature. Example input MaxarCatalogMosaicProducts
+            featureprofile (string) = The desired stacking profile. Defaults to account Default
+            typename (string) = The typename of the desired feature type. Defaults to FinishedFeature. Example input
+            MaxarCatalogMosaicProducts
         Returns:
             Response is either a list of features or a shapefile of all features and associated metdata.
         """
@@ -84,17 +87,17 @@ class Interface:
         """
         Function downloads the image using the wms method.
         Args:
-            bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            height = Integer value representing the vertical number of pixels to return
-            width = Integer value representing the horizontal number of pixels to return
-            img_format = String of the format of the response image either jpeg, png or geotiff
-            identifier = String of the feature id
-            gridoffsets = Sting of the pixel size to be returned in X and Y dimensions
-            zoom_level = integer value of the zoom level. Used for WMTS
-            download = boolean of user option to download band manipulation file locally.
-            outputpath = String of output path must include output format. Downloaded path default is user home path.
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            height (int) = The vertical number of pixels to return
+            width (int) = The horizontal number of pixels to return
+            img_format (string) = The format of the response image either jpeg, png or geotiff
+            identifier (string) = The feature id
+            gridoffsets (string) = The pixel size to be returned in X and Y dimensions
+            zoom_level (int) = The zoom level. Used for WMTS
+            download (bool) = User option to download band manipulation file locally.
+            outputpath (string) = Output path must include output format. Downloaded path default is user home path.
         Kwargs:
-            legacyid = String of the duc id to download the browse image
+            legacyid (string) = The duc id to download the browse image
         Returns:
             requests response object or downloaded file path
         """
@@ -149,10 +152,10 @@ class Interface:
         """
         Function downloads the browse image for the desired legacy id
         Args:
-            input_id: String of the desired input id (Can be feature id or catalog id)
-            img_format: String of the format of the response image either jpeg, png or geotiff
-            outputpath: String of output path must include output format. Downloaded path default is user home path.
-            display: Boolean to display image in IDE (Jupyter Notebooks only)
+            input_id (string) = The desired input id (Can be feature id or catalog id)
+            img_format (string) = The format of the response image either jpeg, png or geotiff
+            outputpath (string) = Output path must include output format. Downloaded path default is user home path.
+            display (bool) = Display image in IDE (Jupyter Notebooks only)
         Returns:
             Downloaded image location of desired legacy id in desired format
         """
@@ -173,8 +176,8 @@ class Interface:
         """
         Function acquires a list of tile calls dependent on the desired bbox and zoom level
         Args:
-            bbox: String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            zoom_level: Integer value of the zoom level
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            zoom_level (int) = The zoom level
         Returns:
             List of individual tile calls for desired bbox and zoom level
         """
@@ -187,11 +190,11 @@ class Interface:
         """
         Function downloads all tiles within a bbox dependent on zoom level
         Args:
-            bbox: String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            zoom_level: Integer value of the zoom level
-            img_format: String of the format of the response image either jpeg, png or geotiff
-            outputpath: String of output path must include output format. Downloaded path default is user home path.
-            display: Boolean to display image in IDE (Jupyter Notebooks only)
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            zoom_level (int) = The zoom level
+            img_format (string) = The format of the response image either jpeg, png or geotiff
+            outputpath (string) = Output path must include output format. Downloaded path default is user home path.
+            display (bool) = Display image in IDE (Jupyter Notebooks only)
         Returns:
             Message displaying success and location of downloaded tiles
         """
@@ -217,11 +220,11 @@ class Interface:
         """
         Function downloads the image and metadata of desired feature id
         Args:
-            bbox: String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            identifier: String of desired feature id
-            gridoffsets: Sting of the pixel size to be returned in X and Y dimensions
-            img_format: String of the format of the response image either jpeg, png or geotiff
-            outputpath: String of output path must include output format. Downloaded path default is user home path.
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            identifier (string) = Desired feature id
+            gridoffsets (string) = The pixel size to be returned in X and Y dimensions
+            img_format (string) = The format of the response image either jpeg, png or geotiff
+            outputpath (string) = Output path must include output format. Downloaded path default is user home path.
         Returns:
             Downloaded image location of desired feature id in desired format and associated metadata
         """
@@ -243,17 +246,16 @@ class Interface:
         """
         Function downloads the image of desired bbox dependent on pixel height and width
         Args:
-            bbox: String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            height: Integer value representing the vertical number of pixels to return
-            width: Integer value representing the horizontal number of pixels to return
-            img_format: String of the format of the response image either jpeg, png or geotiff
-            outputpath: String of output path must include output format. Downloaded path default is user home path.
-            display: Boolean to display image in IDE (Jupyter Notebooks only)
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            height (int) = The vertical number of pixels to return
+            width (int) = The horizontal number of pixels to return
+            img_format (string) = The format of the response image either jpeg, png or geotiff
+            outputpath (string) = Output path must include output format. Downloaded path default is user home path.
+            display (bool) = Display image in IDE (Jupyter Notebooks only)
         Kwargs:
-            filter = CQL filter used to refine data of search.
-            featureprofile = String of the desired stacking profile. Defaults to account Default
-            bands = List of strings containing the desired band combination of 1-4 items. Requires SWIR 8 Band or
-            MS1_MS2
+            filter (string) = CQL filter used to refine data of search.
+            featureprofile (string) = The desired stacking profile. Defaults to account Default
+            bands (list[string]) = The desired band combination of 1-4 items. Requires SWIR 8 Band or MS1_MS2
         Returns:
             Downloaded image location of desired bbox dependent on pixel height and width
         """
@@ -272,7 +274,7 @@ class Interface:
             file_name = process.download_file(result, download_path=outputpath)
         else:
             file_name = process.download_file(result, format_response=img_format)
-        return f"Downloaded file {file_name}"
+        return "Downloaded file {}".format(file_name)
 
     def band_manipulation(self, bbox, featureid, band_combination, height=256, width=256, img_format='jpeg',
                           display=True,
@@ -280,15 +282,15 @@ class Interface:
         """
         Function changes the bands of the feature id passed in.
         Args:
-            bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            featureid = String of the id of the image
-            band_combination = List of strings containing the desired band combination of 1-4 items.
-            height: Integer value representing the vertical number of pixels to return
-            width: Integer value representing the horizontal number of pixels to return
-            image_format: String value of the file type that you want downloaded.
-            outputpath = String of output path must include output format. Downloaded path default is user home path.
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            featureid (string) = The id of the image
+            band_combination (list[string]) = The desired band combination of 1-4 items.
+            height (int) = The vertical number of pixels to return
+            width (int) = The horizontal number of pixels to return
+            image_format (string) = The file type that you want downloaded.
+            outputpath (string) = Output path must include output format. Downloaded path default is user home path.
         Returns:
-            requests response object of the altered image
+            download location for file
         """
 
         band_string = self._band_check(featureid, band_combination)
@@ -298,25 +300,20 @@ class Interface:
                                                      filter=feature_id_filter, bands=band_string)
         return message
 
-    @staticmethod
-    def calculate_sqkm(bbox):
-        area = process.area_sqkm(bbox)
-        return area
-
-    def get_full_res_image(self, featureid, thread_number=100, bbox=None, **kwargs):
+    def get_full_res_image(self, featureid, thread_number=100, bbox=None, mosaic=False, **kwargs):
         """
         Function takes in a feature id and breaks the image up into 1024x1024 tiles, then places a number of calls
         based on multithreading percentages to return a full image strip in multiple tiles
         Args:
-            featureid = String of the id of the image
-            thread_percentage = int: percentage of total tiles returned per thread
-            thread_number = int: number of threads given to multithread functionality
-            bbox = String of the aoi coordinates in crs EPSG:4326
+            featureid (string) = Feature id of the image
+            thread_number (int) = Number of threads given to multithread functionality
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            mosaic (bool) = Flag if image files are mosaiced
         kwargs:
-            outputdirectory = string: desired output location for tiles
-            image_format = string: desired image format (png or jpeg)
+            outputdirectory (string) = Desired output location for tiles
+            image_format (string) = Desired image format (png or jpeg)
         Returns:
-            Finished message with location of tiles
+            None
         """
 
         if bbox:
@@ -367,11 +364,6 @@ class Interface:
                     tiles['c{}_r{}'.format(x, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
                                                                                               y_list[y + 1],
                                                                                               x_list[x + 1])
-        # Original
-        # for y in reversed(range(len(y_list) - 1)):
-        #     for x in range(len(x_list) - 1):
-        #         tiles['c{}_r{}'.format(x,len(y_list)-y-2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
-        #                                                                y_list[y + 1], x_list[x + 1])
 
         print("Started full image download process...")
 
@@ -389,34 +381,19 @@ class Interface:
         response_times = {}
 
         def response_thread(coord_list):
+            """
+            Function multithreads requests to speed up image return process
+            Args:
+                coord_list (list) = Coordinates for individual tiles
+            Returns:
+                List of cell locations and corresponding response objects
+            """
             sub_bbox, sub_grid_cell_location = coord_list.split("|")
             sub_query = querstring.copy()
             sub_query['bbox'] = sub_bbox
             sub_response = requests.request("GET", url, params=sub_query, headers=headers)
             return [sub_grid_cell_location, sub_response]
 
-        def task_to_run(coord_list):
-            """
-            Function multithreads requests to speed up image return process
-            Args:
-                coord_list = List of coordinates for individual tiles
-            Returns:
-                Message displaying success and location of downloaded tiles
-            """
-
-            bbox, grid_cell_location = coord_list.split("|")
-            querstring['bbox'] = bbox
-            response = requests.request("GET", url, params=querstring, headers=headers)
-            response_times[grid_cell_location] = response
-
-            i = len(list(response_times.keys()))
-            l = len(multithreading_array)
-            total_image = (i * 10) // l
-            total_space = 10 - total_image
-            percent = (i * 100) // l
-            if percent % 10 == 0:
-                sys.stdout.write('{}'.format('.' * total_image))
-                sys.stdout.write('\r')
 
         multithreading_array = ["{}|{}".format(k, j) for j, k in list(tiles.items())]
         if 'outputdirectory' not in kwargs.keys():
@@ -447,14 +424,63 @@ class Interface:
         sys.stdout.write('\r')
         print('\n')
 
-        return "Finished full image download process, output directory is: {}".format(os.path.split(outputdirectory)[0])
+        if mosaic:
+            return "Finished full image download process, output directory is: {}. Beginning mosaic process".\
+                format(os.path.split(outputdirectory)[0])
+            create_mosaic(base_dir=kwargs['outputdirectory'], img_size=1024, img_format=image_format, **kwargs)
+        else:
+            return "Finished full image download process, output directory is: {}".\
+                format(os.path.split(outputdirectory)[0])
+
+
+    def create_mosaic(self, base_dir, img_size=1024, img_format='png', **kwargs):
+        '''
+        Function creates a mosaic of downloaded image tiles from full_res_dowload function
+        Args:
+            base_dir (string) = Root directory containing image files to be mosaiced
+            img_size (int) = Size of individual image files, defaults to 1024
+            img_format (string) = Image format of files
+        Kwargs:
+            outputdirectory (string) = Directory destination of finished mosaic file
+        Returns:
+            None
+        '''
+        Image.MAX_IMAGE_PIXELS = None
+        coord_list = []
+        for k in [i for i in os.listdir(base_dir) if ".txt" not in i and os.path.isfile(os.path.join(base_dir, i))]:
+            filename = k
+            coords = k.replace('c', '').replace('_r', ',').replace('.{}'.format(img_format), '').split(',')
+            coord_list.append([filename, int(coords[0]), int(coords[1])])
+
+        max_row = max([i[2] for i in coord_list]) + 1
+        max_col = max([i[1] for i in coord_list]) + 1
+        maximum = max(max_col, max_row)
+        size = img_size * maximum
+        mosaic = Image.new('RGB', (max_col * img_size, max_row * img_size), (size, size, size))
+
+        count = 0
+        for i in coord_list:
+            column = img_size * i[1]
+            row = img_size * i[2]
+            mosaic.paste(Image.open(os.path.join(base_dir, i[0])), (column, row))
+            count += 1
+            if count % 100 == 0:
+                sys.stdout.write("Processing {} of {} total".format(count, len(coord_list)))
+                sys.stdout.write("\r")
+
+        if 'outputdirectory' in kwargs.keys():
+            mosaic.save(r"{}\merged_image.{}".format(kwargs['outputdirectory'], img_format))
+            sys.stdout.write("Finished image mosaic process, output directory is: {}".format(kwargs['outputdirectory']))
+        else:
+            mosaic.save(r"{}\merged_image.{}".format(base_dir, img_format))
+            sys.stdout.write("Finished image mosaic process, output directory is: {}".format(base_dir))
 
     def _band_check(self, featureid, band_combination):
         """
         Function checks bands given against a list of valid bands
         Args:
-            featureid: String of the id of the image
-            band_combination: List of strings containing the desired band combination of 1-4 items.
+            featureid (string) = The id of the image
+            band_combination (list[string]) = The desired band combination of 1-4 items.
         Returns:
             String of band combination
         """
@@ -476,11 +502,9 @@ class Interface:
         """
         Function takes in a feature id or legacy id and finds the browse image associated with it.
         Args:
-            input_id = String of the id that you are searching for
-            download = boolean of user option to download band manipulation file locally.
-            outputpath = String of output path must include output format. Downloaded path default is user home path.
+            input_id (string) = The id that you are searching for
         Returns:
-            requests response object of the browse image
+            Legacy id of desired feature
         """
 
         catalog_identifiers = ['101', '102', '103', '104', '105', '106']
@@ -494,3 +518,16 @@ class Interface:
             json_return = self.search(filter="featureId='{}'".format(input_id))
             legacy_id = json_return[0]['properties']['legacyId']
         return legacy_id
+
+    @staticmethod
+    def calculate_sqkm(bbox):
+        """
+        Function calculates the area in square kilometers of the desired bounding box
+        Args:
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+        Returns:
+            Float of bounding box area in square kilometers
+        """
+        
+        area = process.area_sqkm(bbox)
+        return area

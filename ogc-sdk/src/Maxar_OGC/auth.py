@@ -22,7 +22,7 @@ class Auth:
         self.connect_id = connectid
         self.username = username
         self.password = password
-        self.version = '1.0.1'
+        self.version = '1.1.0'
 
         if not self.base_url:
             dir_path = os.path.expanduser('~')
@@ -56,8 +56,14 @@ class Auth:
                     cred_dict.update({key: value})
         tenant = cred_dict['user_tenant']
         connectid = cred_dict['user_connectid']
-        user_name = cred_dict['user_name']
-        password = cred_dict['user_password']
+        try:
+            user_name = cred_dict['user_name']
+        except:
+            user_name = ' '
+        try:
+            password = cred_dict['user_password']
+        except:
+            password = ' '
         return tenant, connectid, user_name, password
 
     def _check_auth(self):
@@ -67,7 +73,8 @@ class Auth:
         if not connectid:
             raise Exception('Connect ID field is required. Please include a valid Connect ID.')
 
-        if (not self.username and self.password) or (not self.password and self.username):
+        if ((not self.username and self.username != ' ') and self.password) or \
+                ((not self.password and self.password != ' ') and self.username):
             raise Exception('Username and Password must both be provided.')
 
         url = "{}catalogservice/wfsaccess?" \
@@ -81,7 +88,7 @@ class Auth:
         session = {'base_url': self.base_url,
                    'connectid': self.connect_id,
                    'version': self.version}
-        if self.username and self.password:
+        if self.username != ' ' and self.password != ' ':
             header.update({'Authorization': 'Basic {}'.format(self._encode_creds())})
         session.update({'headers': header})
         return session
