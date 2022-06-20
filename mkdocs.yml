@@ -12,7 +12,6 @@ nav:
         - 'download_tiles.md'
         - 'get_full_res_image.md'
     - 'Misc':
-        - 'discover_browse.md'
         - 'band_manipulation.md'
         - 'create_mosaic.md'
         - 'cli_commands.md'
@@ -26,8 +25,4 @@ theme:
   custom_dir: docs/stylesheets
 extra_css: 
     - stylesheets/extra.css
-docs_dir: 
-    - './ogc-sdk/docs'
-site_dir: 
-    - './ogc-sdk/site'
 
