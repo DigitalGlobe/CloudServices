@@ -6,6 +6,7 @@ setup.cfg
 setup.py
 src/Maxar_OGC/__init__.py
 src/Maxar_OGC/auth.py
+src/Maxar_OGC/cli_commands.py
 src/Maxar_OGC/interface.py
 src/Maxar_OGC/process.py
 src/Maxar_OGC/wcs.py
@@ -15,5 +16,6 @@ src/Maxar_OGC/wmts.py
 src/Maxar_OGC.egg-info/PKG-INFO
 src/Maxar_OGC.egg-info/SOURCES.txt
 src/Maxar_OGC.egg-info/dependency_links.txt
+src/Maxar_OGC.egg-info/entry_points.txt
 src/Maxar_OGC.egg-info/requires.txt
 src/Maxar_OGC.egg-info/top_level.txt

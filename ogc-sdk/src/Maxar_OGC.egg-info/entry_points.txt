@@ -1,0 +1,7 @@
+[console_scripts]
+area = Maxar_OGC.cli_commands:calculate_bbox_sqkm
+bands = Maxar_OGC.cli_commands:band_manipulation
+config = Maxar_OGC.cli_commands:config_file
+download = Maxar_OGC.cli_commands:download
+password = Maxar_OGC.cli_commands:reset_password
+search = Maxar_OGC.cli_commands:search

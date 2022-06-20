@@ -2,3 +2,5 @@ pyproj
 shapely
 requests
 ipython
+pillow
+click

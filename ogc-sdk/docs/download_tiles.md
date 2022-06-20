@@ -1,9 +1,9 @@
 # Download Tiles
 
 
-Args that can be passed in:
+## Args:
 
-## bbox (str)
+#### bbox (str):
 
   A bbox (bounding box) is a rectangular feature that will encompass a desired Area Of Interest (AOI).
   The format is miny,minx,maxy,maxx (minimum y coordinate, minimum x coordinate, maximum y coordinate, maximum y coordinate) for
@@ -14,7 +14,7 @@ Args that can be passed in:
      download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912")
 
 
-## zoom_level (int)
+#### zoom_level (int):
 
   The zoom_level is the desired scale of the image
 
@@ -25,7 +25,7 @@ Args that can be passed in:
    
      
 
-## img_format (str)
+#### img_format (str):
 
   The img_format is the desired format of the returned object. Available options include **jpeg**, **png**, or **geotiff**
 
@@ -33,7 +33,7 @@ Args that can be passed in:
 
      download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512, img_format='png')
 
-## outputpath (str)
+#### outputpath (str):
  
  The outputpath is the desired location for the image to be downloaded. outputpath defaults to root directory and defaults name of file to download . File extension is also needed in outputpath if declared (ex: r'C:\Users\<user>\image.jpeg')
 	
@@ -41,7 +41,7 @@ Args that can be passed in:
 
 		(C:\Users\<user>\download.jpeg)
 
-## display (bool)
+#### display (bool):
 
   The display is a boolean of whether or not the desired image should be dispayed. download defaults to true. 
 

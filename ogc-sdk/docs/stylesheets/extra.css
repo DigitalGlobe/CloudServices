@@ -1,0 +1,131 @@
+html {
+  font-size: 150% !important;
+}
+
+.md-header__button.md-logo img {
+    height: 50px !important;
+    width: 125px !important;
+}
+
+.md-header-nav__title, .md-header__title {
+    line-height: 2.6rem;
+    font-family: "blender";
+    font-weight: 200;
+    font-size: 1.4rem;
+}
+.md-header__button.md-logo :-webkit-any(img,svg){
+	
+}
+
+.md-header__button.md-logo {
+    margin: 0;
+    padding: 0;
+}
+
+.md-header {
+    background-color: #6b6965;
+}
+
+.md-tabs {
+    background-color: #6b6965;
+}
+.md-tabs__item a {
+  color: #eeeeee;
+}
+.md-footer-meta {
+    background-color: #6b6965;
+}
+
+.md-footer-copyright {
+    width: 100%;
+}
+
+.md-footer-copyright__highlight {
+    text-align: center;
+}
+
+/* Blender Heavy */
+@font-face {
+    font-family: "Blender";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Heavy.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Heavy.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Heavy.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Heavy.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Heavy.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+  }
+
+  /* Blender bold */
+  @font-face {
+    font-family: "Blender";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Bold.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Bold.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Bold.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Bold.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  /* Blender medium */
+  @font-face {
+    font-family: "Blender";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Medium.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Medium.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Medium.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Medium.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  /* Blender book */
+  @font-face {
+    font-family: "Blender";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Book.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Book.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Book.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Book.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Book.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+  }
+
+  /* Blender thin */
+  @font-face {
+    font-family: "Blender";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Thin.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Thin.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Thin.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Thin.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/blender/Blender-Thin.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
+  }
+
+  /* Din Regular */
+  @font-face {
+    font-family: "Din";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_3_0.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_3_0.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_3_0.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_3_0.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_3_0.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  /* Din Light */
+  @font-face {
+    font-family: "Din";
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_2_0.eot");
+    src: url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_2_0.eot?#iefix") format("embedded-opentype"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_2_0.woff2") format("woff2"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_2_0.woff") format("woff"),
+      url("https://maxar-marketing.s3.amazonaws.com/fonts/din/387176_2_0.ttf") format("truetype");
+    font-weight: 100;
+    font-style: normal;
+  }
+
