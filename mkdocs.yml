@@ -15,6 +15,8 @@ nav:
         - 'band_manipulation.md'
         - 'create_mosaic.md'
         - 'cli_commands.md'
+    - 'Release Notes':
+        - 'release_notes.md'
 
 docs_dir: './ogc-sdk/docs'
 site_dir: './ogc-sdk/site'
