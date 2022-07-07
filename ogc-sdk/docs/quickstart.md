@@ -2,7 +2,7 @@
 
 ## Quick Start Guide
 
-After setting up the config file from the [Getting Started](/) section, run the following code to create an instance of the Interface Class. This instance will be used to access functionality of the OGC-SDK.
+After setting up the config file from the [Getting Started](index.md) section, run the following code to create an instance of the Interface Class. This instance will be used to access functionality of the OGC-SDK.
 
 	from Maxar_OGC import Interface
 	interface = Interface()
@@ -90,7 +90,7 @@ The results will be a list of dictionaries
 	  'coverage': 0.0010546500824560633}
 	]
 		
-For more details, see [Search](/image_search)
+For more details, see [Search](image_search.md)
 	
 To download the image to the default location ``C:\Users\<user>\download.jpeg`` or `~\download.jpeg`, we will use the following code. This will download the imagery from the feature ID within the aoi and return the location of the downloaded image.
 
@@ -106,7 +106,7 @@ To download the image to the default location ``C:\Users\<user>\download.jpeg`` 
 	
 The result should be a jpeg as shown below.
 
-![satellite_image](/images/sample_image.jpeg)
+![satellite_image](images/sample_image.jpeg)
 
-For more details, see [Download Image by Pixel Count](/download_image_pixel_count)
+For more details, see [Download Image by Pixel Count](download_image_pixel_count.md)
 	
