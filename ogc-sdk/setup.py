@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
   name = 'Maxar_OGC',
-  version = '1.1.1',
+  version = '1.1.2',
   license='MIT',
   description = 'SDK for interacting with Maxar imagery platforms',
   long_description=README,
@@ -29,7 +29,7 @@ setup(
           'click'
       ],
   classifiers=[
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Developers',
     'Topic :: Software Development :: Build Tools',
     'License :: OSI Approved :: MIT License',

@@ -4,7 +4,7 @@
 
 #### base_dir (str) (required):
 
-  The base_dir is the root directory containing the image files to be mosaiced.
+  The `base_dir` is the root directory containing the image files to be mosaiced.
 
    **Example:**
    
@@ -17,7 +17,7 @@
 
    **Example:**
    
-     img_size=1024
+     interface.create_mosaic(base_dir, img_size=1024)
 
 #### img_format (str):
 
@@ -25,15 +25,15 @@
   
    **Example:**
    
-     img_format='png'
+     interface.create_mosaic(base_dir, img_format='png')
 
 
 ## Kwargs:
 
 #### outputdirectory (str):
 
-  The outputdirectory is the desired location for the image to be downloaded. outputdirectory defaults to root directory and defaults name of file to download (ex: C:\Users\<user>\merged_image.png).
+  The `outputdirectory` is the desired location for the image to be downloaded. `outputdirectory` defaults to root directory and defaults name of file to download (ex: `C:\Users\<user>\merged_image.png`).
 
    **Example:**
    
-     create_mosaic(base_dir=`base_dir`, img_size=1024, img_format='png', outputdirectory=`outputdirectory`)
+     interface.create_mosaic(base_dir=base_dir, img_size=1024, img_format='png', outputdirectory=outputdirectory)

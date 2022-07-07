@@ -5,25 +5,25 @@
 
 #### bbox (str) (required):
 
-  A bbox (bounding box) is a rectangular feature that will encompass a desired Area Of Interest (AOI).
+  A `bbox` (bounding box) is a rectangular feature that will encompass a desired Area Of Interest (AOI).
   The format is miny,minx,maxy,maxx (minimum y coordinate, minimum x coordinate, maximum y coordinate, maximum y coordinate). Other projections are not supported at this time
 
    **Example:**
    
-     band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912")
+     interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912")
 
 
 #### featureid (str) (required):
 
-  The featureid is the online id of the desired image feature
+  The `featureid` is the online id of the desired image feature
 
    **Example:**
    
-     band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388")
+     interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388")
 
 #### band_combination (list) (required):
 
-  The band_combination is a list of strings containing the desired band combination of 1-4 items. Available options include:
+  The `band_combination` is a list of strings containing the desired band combination of 1-4 items. Available options include:
 
    * R
    * G
@@ -45,37 +45,29 @@
 
    **Example:**
    
-     band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", band_combination=['R', 'B', 'G', 'C'])
+     interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", band_combination=['R', 'B', 'G', 'C'])
 
-#### height (int):
+#### height, width (int):
 
-  Desired image height in pixels. Maximum is 8000.
-
-   **Example:**
-   
-     download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", height=512, width=512)
-	 
-#### width (int):
-
-  Desired image width in pixels. Maximum is 8000.
+  Desired image `height` and `width` in pixels. Maximum is 8000.
 
    **Example:**
    
-     download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", height=512, width=512)
+     interface.download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", height=512, width=512)
 
 #### img_format (str):
 
-  The img_format is the desired format of the returned object. Available options include **jpeg**, **png**, or **geotiff**
+  The `img_format` is the desired format of the returned object. Available options include **jpeg**, **png**, or **geotiff**
 
    **Example:**
    
-     band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", img_format='png')
+     interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", img_format='png')
 
 #### outputpath (str):
 
-  The outputpath is the desired location for the image to be downloaded. outputpath defaults to root directory and defaults name of file 
-  to download (ex: r"C:\Users\user\download.jpeg"). File extension is also needed in outputpath if declared (ex: r"C:\Users\user\image.jpeg")
+  The `outputpath` is the desired location for the image to be downloaded. `outputpath` defaults to root directory and defaults name of file 
+  to download (ex: r"C:\Users\user\download.jpeg"). File extension is also needed in `outputpath` if declared (ex: r"C:\Users\user\image.jpeg")
 
    **Example:**
    
-     band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", outputpath=r"C:\Users\user\image.jpeg")
+     interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", outputpath=r"C:\Users\user\image.jpeg")
