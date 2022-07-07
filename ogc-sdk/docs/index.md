@@ -8,10 +8,12 @@ and login credentials.
 Installation:
 
 1. pip install Maxar-OGC
-2. Create a credentials file called ``.ogc-config`` in the following format
+2. Create a credentials file called ``.ogc-config`` in your home directory with the following format
 
-    `[ogc]
-user_name=<your-user-name>
-user_password=<your-password>
-user_tenant=<your-base-url> i.e. https://securewatch.digitalglobe.com
-user_connectid=<your-connectid>`
+		[ogc] 
+		user_name=<your-user-name>
+		user_password=<your-password>
+		user_tenant=<your-base-url> i.e. https://securewatch.digitalglobe.com
+		user_connectid=<your-connectid> 
+
+After creating your config file, you are now ready to start with the [Quickstart Guide](/quickstart)

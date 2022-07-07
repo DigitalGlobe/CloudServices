@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: Maxar-OGC
-Version: 1.1.1
+Version: 1.1.2
 Summary: SDK for interacting with Maxar imagery platforms
 Author: GCS Marianas Team
 Author-email: DL-GCS-Marianas@digitalglobe.com
@@ -8,7 +8,7 @@ License: MIT
 Project-URL: Documentation, https://cloudservices.readthedocs.io/en/latest/index.html
 Project-URL: Source, https://github.com/DigitalGlobe/CloudServices
 Keywords: OGC,WMS,WFS,WMTS,WCS,MAXAR,IMAGERY,GIS
-Classifier: Development Status :: 4 - Beta
+Classifier: Development Status :: 5 - Production/Stable
 Classifier: Intended Audience :: Developers
 Classifier: Topic :: Software Development :: Build Tools
 Classifier: License :: OSI Approved :: MIT License

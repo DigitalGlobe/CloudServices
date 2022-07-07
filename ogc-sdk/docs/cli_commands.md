@@ -20,7 +20,7 @@ After downloading the Maxar_OGC library, open a terminal session and activate th
   - `--featureprofile`, `-fp`: Feature profile. A string of the desired stacking profile. Defaults to account Default
   - `--typename`, `-t`: Typename. A string of the typename. Defaults to FinishedFeature. Example input: MaxarCatalogMosaicProducts
 
-For further information on search functionality, see [search](image_search.md)
+For further information on search functionality, see [Search](image_search.md)
 
 ### Download available imagery
 - In the terminal, enter `download` followed by the desired flags to refine your download. Available flags can be found by running `download --help`
@@ -33,17 +33,20 @@ For further information on search functionality, see [search](image_search.md)
   - `--gridoffsets`, `-g`: Grid offsets. A string of the pixel size to be returned in X and Y dimensions
   - `--zoom`, `-z`: Zoom level. An integer value of the zoom level. Used for WMTS
   - `--download`, `-d`: Download. A boolean operator for user option to download file locally
-- **NOTE: Structure of calls should be structured with one of the following examples:**
-  - bbox, zoom_level, img_format
-  - bbox, identifier, gridoffsets, img_format
-  - bbox, img_format, height, width
+  
+**NOTE: Structure of calls should be structured with one of the following examples:**
+  
+	- bbox, zoom_level, img_format
+	- bbox, identifier, gridoffsets, img_format
+	- bbox, img_format, height, width
 
 For further information on download functionality, see one of the following:
-- [download](download_image.md)
-- [download browse](download_browse_image.md)
-- [download by featureid](download_image_featureid.md)
-- [download by pixel count](download_image_pixel_count.md)
-- [download tiles](download_tiles.md)
+
+- [Download](download_image.md)
+- [Download Browse](download_browse_image.md)
+- [Download with Feature Id](download_image_featureid.md)
+- [Download by Pixel Count](download_image_pixel_count.md)
+- [Download Tiles](download_tiles.md)
 
 ### Band manipulation
 - In the terminal, enter `bands` followed by the desired flags to refine your band manipulation. Available flags can be found by running `bands --help`
@@ -55,7 +58,7 @@ For further information on download functionality, see one of the following:
   - `--width`, `-w`: Width. An integer value representing the horizontal number of pixels to return
   - `--img_format`, `-img`: Image format. A string of the format of the response image in jpeg, png, or geotiff
 
-For further information on band manipulation functionality, see [band manipulation](band_manipulation.md)
+For further information on band manipulation functionality, see [Band Manipulation](band_manipulation.md)
 
 ### Calculate bbox area in SQKM
 - In the terminal, enter `area` to determine the size of the desired AOI in SQKM

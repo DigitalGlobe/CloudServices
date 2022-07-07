@@ -3,7 +3,8 @@ site_name: Maxar-OGC Docs
 
 nav:
     - Home: 'index.md'
-    - 'image_search.md'
+    - Quickstart: 'quickstart.md'
+    - Search: 'image_search.md'
     - Download:
         - 'download_image.md'
         - 'download_browse_image.md'
