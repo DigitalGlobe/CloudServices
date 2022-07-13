@@ -16,4 +16,4 @@ Installation:
 		user_tenant=<your-base-url> i.e. https://securewatch.digitalglobe.com
 		user_connectid=<your-connectid> 
 
-After creating your config file, you are now ready to start with the [Quickstart Guide](/quickstart)
+After creating your config file, you are now ready to start with the [Quickstart Guide](quickstart)
