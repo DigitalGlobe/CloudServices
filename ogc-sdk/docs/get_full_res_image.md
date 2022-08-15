@@ -37,6 +37,14 @@
    
      interface.get_full_res_image(featureid='932f7992a4d86a9ca412c024c22792ce', mosaic=True)
 	 
+#### img_size (int):
+
+	Resolution of individual images in pixels (img_size x img_size). Defaults to 1024
+	
+	**Example:**
+	
+	 interface.get_full_res_image(featureid='932f7992a4d86a9ca412c024c22792ce', img_size=512)
+	 
 	 
 ## Kwargs:	 
 	 

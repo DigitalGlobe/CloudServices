@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "c750adf4-a50b-4e2b-a8b2-9957f19505ef",
+		"name": "GCS OGC WMTS Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "WMTS GetTile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/wmtsaccess?CONNECTID={{connectid}}&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&TILEMATRIXSET=EPSG:3857&LAYER=DigitalGlobe:ImageryTileService&FORMAT=image/png&STYLE=&TILEMATRIX=EPSG:3857:16&TILEROW=24868&TILECOL=13654&FEATUREPROFILE=Global_Currency_Profile&CQL_FILTER=(acquisitionDate<'2019-01-01') AND (cloudCover<.10)&{{$randomWord}}={{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"wmtsaccess"
+					],
+					"query": [
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "SERVICE",
+							"value": "WMTS",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "VERSION",
+							"value": "1.0.0",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetTile",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "TILEMATRIXSET",
+							"value": "EPSG:3857",
+							"description": "REQUIRED. Use with ESPG:3857"
+						},
+						{
+							"key": "LAYER",
+							"value": "DigitalGlobe:ImageryTileService",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "FORMAT",
+							"value": "image/png",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "STYLE",
+							"value": "",
+							"description": "OPTIONAL"
+						},
+						{
+							"key": "TILEMATRIX",
+							"value": "EPSG:3857:16",
+							"description": "REQUIRED. Use with ESPG:3857"
+						},
+						{
+							"key": "TILEROW",
+							"value": "24868",
+							"description": "REQUIRED. Use with ESPG:3857"
+						},
+						{
+							"key": "TILECOL",
+							"value": "13654",
+							"description": "REQUIRED. Use with ESPG:3857"
+						},
+						{
+							"key": "FEATUREPROFILE",
+							"value": "Global_Currency_Profile",
+							"description": "OPTIONAL. Defaults to account default. Specified here to ensure low-res base imagery appears at lower zoom levels. Note that 'Default_Profile' does not provide low-res imagery so blank tiles will return at lower zoom levels or where no high-res imagery exists."
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "(acquisitionDate<'2019-01-01') AND (cloudCover<.10)",
+							"description": "OPTIONAL"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "{{$randomWord}}"
+						},
+						{
+							"key": "FEATUREPROFILE",
+							"value": "Vivid_2019",
+							"description": "OPTIONAL. The Vivid_2019 value given to the FEATUREPROFILE parameter enables the vivid tilecache products.",
+							"disabled": true
+						},
+						{
+							"key": "TILEMATRIXSET",
+							"value": "EPSG:4326",
+							"description": "REQUIRED. Use with ESPG:4326",
+							"disabled": true
+						},
+						{
+							"key": "TILEMATRIX",
+							"value": "EPSG:4326:16",
+							"description": "REQUIRED. Use with ESPG:4326",
+							"disabled": true
+						},
+						{
+							"key": "TILEROW",
+							"value": "18293",
+							"description": "REQUIRED. Use with ESPG:4326",
+							"disabled": true
+						},
+						{
+							"key": "TILECOL",
+							"value": "27308",
+							"description": "REQUIRED. Use with ESPG:4326",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WMTS GetCapabilities",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/earthservice/wmtsaccess?CONNECTID={{connectid}}&SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetCapabilities&{{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"earthservice",
+						"wmtsaccess"
+					],
+					"query": [
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "SERVICE",
+							"value": "WMTS",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "VERSION",
+							"value": "1.0.0",
+							"description": "REQUIRED (defaults to  1.0.0)"
+						},
+						{
+							"key": "REQUEST",
+							"value": "GetCapabilities",
+							"description": "REQUIRED"
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
