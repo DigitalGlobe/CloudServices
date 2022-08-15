@@ -1,0 +1,328 @@
+{
+	"info": {
+		"_postman_id": "4070a8bd-fe28-4982-b425-09dc59c7184e",
+		"name": "GCS OGC WFS Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "WFS GetCapabilities",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=1.1.0&CONNECTID={{connectid}}&{{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "REQUEST",
+							"value": "GetCapabilities",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "1.1.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WFS GetFeature",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?REQUEST=GetFeature&TYPENAME=DigitalGlobe:FinishedFeature&SERVICE=WFS&VERSION=1.1.0&CONNECTID={{connectid}}&SRSNAME=EPSG:4326&FEATUREPROFILE=Default_Profile&WIDTH=3000&HEIGHT=3000&CQL_FILTER=BBOX(geometry,39.7530,-104.9962,39.7580,-104.9912)AND(acquisitionDate>='2019-01-01')AND(cloudCover<0.10)&{{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "REQUEST",
+							"value": "GetFeature",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:FinishedFeature",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "1.1.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "BBOX",
+							"value": "39.7530,-104.9962,39.7580,-104.9912",
+							"description": "OPTIONAL. Desired area-of-interest. Coordinates in lat-long regardless of desired output projection but can be in a different projection if specified correctly (see alternate example below).  If not included, no spatial query will be performed and likely time out due to size. Cannot be used with CQL_FILTER parameter. In that case, include BBOX in CQL_FILTER as in the example below.",
+							"disabled": true
+						},
+						{
+							"key": "SRSNAME",
+							"value": "EPSG:4326",
+							"description": "REQUIRED (defaults to EPSG:4326). Desired  projection of returned features - may be different from projection/CRS of BBOX."
+						},
+						{
+							"key": "FEATUREPROFILE",
+							"value": "Default_Profile",
+							"description": "OPTIONAL. Defaults to Account default. See notes about WIDTH and HEIGHT Parameters below if anything other than Default_Profile is used.\n"
+						},
+						{
+							"key": "WIDTH",
+							"value": "3000",
+							"description": "REQUIRED. Not required for Default_Profile but required for all others."
+						},
+						{
+							"key": "HEIGHT",
+							"value": "3000",
+							"description": "REQUIRED. Not required for Default_Profile but required for all others."
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "BBOX(geometry,39.7530,-104.9962,39.7580,-104.9912)AND(acquisitionDate>='2019-01-01')AND(cloudCover<0.10)",
+							"description": "OPTIONAL. Cannot be used with BBOX. Ideally, use BBOX in CQL Filter to avoid large requests which may time out."
+						},
+						{
+							"key": "PROPERTYNAME",
+							"value": "geometry,featureId,acquisitionDate",
+							"description": "OPTIONAL. Comma-separated list of attributes to be returned. Use if not all metadtata fields are desired. Case-sensitive.",
+							"disabled": true
+						},
+						{
+							"key": "OUTPUTFORMAT",
+							"value": "json",
+							"description": "OPTIONAL (defaults to gml). Format of response. Options inlcude json, shapefile, etc. See GetCapabilities for valid values.",
+							"disabled": true
+						},
+						{
+							"key": "SHOWTHERASTERRETURNED",
+							"value": "True",
+							"description": "OPTIONAL. Returns metadata (including geometry) of ONLY the imagery that would be displayed for the equivalent imagery request. Geometry is non-overlapping and clipped to the bounding box. Any CQL_FILTER and FEATUREPROFILE values are also honored.",
+							"disabled": true
+						},
+						{
+							"key": "RESULTTYPE",
+							"value": "hits",
+							"description": "OPTIONAL. Returns only the count of features returned. See 'numberOfFeatures' in response.",
+							"disabled": true
+						},
+						{
+							"key": "SORTBY",
+							"value": "acquisitionDate+A",
+							"description": "OPTIONAL. Sort by attribute. +A for ascending, +D for descending.",
+							"disabled": true
+						},
+						{
+							"key": "MAXFEATURES",
+							"value": "10",
+							"description": "OPTIONAL. The maximum number of features to return.",
+							"disabled": true
+						},
+						{
+							"key": "BBOX",
+							"value": "-11688123.52,4830113.56,-11687566.92,4830837.57,EPSG:3857",
+							"description": "OPTIONAL. Example of BBOX in coordinates other than lat-long. Lower-Left, Upper-Right in x,y order followed by EPSG:3857",
+							"disabled": true
+						},
+						{
+							"key": "SRSNAME",
+							"value": "EPSG:3857",
+							"description": "REQUIRED. Use with BBOX with coordinates set for projects ESPG:3857",
+							"disabled": true
+						},
+						{
+							"key": "maxfeatures",
+							"value": "20",
+							"description": "OPTIONAL. Number of features you want returned.",
+							"disabled": true
+						},
+						{
+							"key": "startIndex",
+							"value": "3",
+							"description": "OPTIONAL. Item number to start the number of maxfeatures you want returned.",
+							"disabled": true
+						},
+						{
+							"key": "VERSION",
+							"value": "2.0.0",
+							"description": "REQUIRED. Additional supported version for WFS.",
+							"disabled": true
+						},
+						{
+							"key": "VERSION",
+							"value": "1.0.0",
+							"description": "REQUIRED. Additional supported version for WFS.",
+							"disabled": true
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": null
+						}
+					]
+				},
+				"description": "A common WFS use case is to query for features using both a BBOX and a CQL Filter. However, these two parameters are mutually exclusive and will throw an error. Instead, include the BBOX in the CQL Filter itself as in this example."
+			},
+			"response": []
+		},
+		{
+			"name": "WFS Get metadata for a WMTS tile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Pragma",
+						"value": "akamai-x-cache-on, akamai-x-cache-remote-on, akamai-x-check-cacheable, akamai-x-get-cache-key, akamai-x-get-ssl-client-session-id, akamai-x-get-true-cache-key, akamai-x-get-request-id",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{host}}/catalogservice/wfsaccess?REQUEST=GetFeature&TYPENAME=DigitalGlobe:TileMatrixFeature&SERVICE=WFS&VERSION=1.1.0&CONNECTID={{connectid}}&SRSNAME=EPSG:4326&FEATUREPROFILE=Default_Profile&WIDTH=3000&HEIGHT=3000&CQL_FILTER=(layer='DigitalGlobe:ImageryTileService')AND(tileMatrixSet='EPSG:3857')AND(tileMatrix='EPSG:3857:17')AND(row=49728)AND(column=27308)&{{$randomWord}}",
+					"protocol": "https",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"catalogservice",
+						"wfsaccess"
+					],
+					"query": [
+						{
+							"key": "REQUEST",
+							"value": "GetFeature",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "TYPENAME",
+							"value": "DigitalGlobe:TileMatrixFeature",
+							"description": "REQUIRED. The DigitalGlobe:TileMatrixFeature typename will return the metadata for a WMTS tile specified in the CQL_FILTER parameter."
+						},
+						{
+							"key": "SERVICE",
+							"value": "WFS",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "VERSION",
+							"value": "1.1.0",
+							"description": "REQUIRED. Will default to 1.1.0 if not explicily included."
+						},
+						{
+							"key": "CONNECTID",
+							"value": "{{connectid}}",
+							"description": "REQUIRED."
+						},
+						{
+							"key": "SRSNAME",
+							"value": "EPSG:4326",
+							"description": "REQUIRED (defaults to EPSG:4326). Desired  projection of returned features - may be different from projection/CRS of BBOX."
+						},
+						{
+							"key": "FEATUREPROFILE",
+							"value": "Default_Profile",
+							"description": "OPTIONAL. Defaults to Account default. See notes about WIDTH and HEIGHT Parameters below if anything other than Default_Profile is used.\n"
+						},
+						{
+							"key": "WIDTH",
+							"value": "3000",
+							"description": "REQUIRED. Not required for Default_Profile but required for all others."
+						},
+						{
+							"key": "HEIGHT",
+							"value": "3000",
+							"description": "REQUIRED. Not required for Default_Profile but required for all others."
+						},
+						{
+							"key": "CQL_FILTER",
+							"value": "(layer='DigitalGlobe:ImageryTileService')AND(tileMatrixSet='EPSG:3857')AND(tileMatrix='EPSG:3857:17')AND(row=49728)AND(column=27308)",
+							"description": "REQUIRED for TileMatrixFeature. CQL_FILTER will specify the specific WMTS tile for which to return metadata. Filters for other attributes can also be included."
+						},
+						{
+							"key": "OUTPUTFORMAT",
+							"value": "json",
+							"description": "OPTIONAL (defaults to gml). Format of response. Options inlcude json, shapefile, etc. See GetCapabilities for valid values.",
+							"disabled": true
+						},
+						{
+							"key": "RESULTTYPE",
+							"value": "hits",
+							"description": "OPTIONAL. Returns only the count of features returned. See 'numberOfFeatures' in response.",
+							"disabled": true
+						},
+						{
+							"key": "SORTBY",
+							"value": "acquisitionDate+A",
+							"description": "OPTIONAL. Sort by attribute. +A for ascending, +D for descending.",
+							"disabled": true
+						},
+						{
+							"key": "MAXFEATURES",
+							"value": "10",
+							"description": "OPTIONAL. The maximum number of features to return.",
+							"disabled": true
+						},
+						{
+							"key": "{{$randomWord}}",
+							"value": "",
+							"description": "Used to generate unique requests in order to bypass local and CDN caching for purposes of testing."
+						}
+					]
+				},
+				"description": "A common WFS use case is to query for features using both a BBOX and a CQL Filter. However, these two parameters are mutually exclusive and will throw an error. Instead, include the BBOX in the CQL Filter itself as in this example."
+			},
+			"response": []
+		}
+	]
+}

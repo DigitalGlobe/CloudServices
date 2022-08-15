@@ -29,11 +29,19 @@
 	  
 #### shapefile (bool):
 
-  Binary of whether or not to return as shapefile format
+  Boolean to determine if results are returned in a shapefile format
   
    **Example:**
    
      interface.search(bbox="39.7530, -104.9962, 39.7580, -104.9912", shapefile=True)
+	 
+#### csv (bool):
+
+  Boolean to determine if results are returned in a csv format.
+	
+   **Example:**
+   
+     interface.search(bbox="39.7530, -104.9962, 39.7580, -104.9912", csv=True)
 
 
 ## Kwargs:

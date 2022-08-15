@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
   name = 'Maxar_OGC',
-  version = '1.1.2',
+  version = '1.2.0',
   license='MIT',
   description = 'SDK for interacting with Maxar imagery platforms',
   long_description=README,
@@ -25,8 +25,11 @@ setup(
           'shapely',
           'requests',
           'ipython',
-	  'pillow',
-          'click'
+          'pillow',
+          'click',
+          #'rasterio',
+          'beautifulsoup4',
+          'lxml'
       ],
   classifiers=[
     'Development Status :: 5 - Production/Stable',
