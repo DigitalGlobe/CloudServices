@@ -47,6 +47,14 @@
    
      interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", band_combination=['R', 'B', 'G', 'C'])
 
+#### srsname (str):
+
+  Desired projection. Defaults to "EPSG:4326".
+  
+    **Example:**
+	
+	  interface.band_manipulation(bbox="39.7530, -104.9962, 39.7580, -104.9912", featureid="d330c2f9486b4b5b0798b142fd1e6388", band_combination=['R', 'B', 'G', 'C'], srsname="EPSG:3857")
+
 #### height, width (int):
 
   Desired image `height` and `width` in pixels. Maximum is 8000.

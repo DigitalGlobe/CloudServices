@@ -10,6 +10,13 @@
    
      interface.search(bbox="39.7530, -104.9962, 39.7580, -104.9912")
 
+#### srsname (str):
+  The desired projection. Defaults to "EPSG:4326".
+  
+  **Example:**
+  
+    interface.search(bbox="39.7530, -104.9962, 39.7580, -104.9912", srsname="EPSG:3857")
+
 #### filter (str):
 
   A `filter` is a CQL filter using Common Query Language to refine data of search. Further CQL parameters accepted by Maxar can be

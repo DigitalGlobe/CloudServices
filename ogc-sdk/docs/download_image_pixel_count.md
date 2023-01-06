@@ -20,6 +20,14 @@
    **Example:**
    
      interface.download_image_by_pixel_count(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512)
+	 
+#### srsname (str):
+
+  Desired projection. Defaults to "EPSG:4326".
+  
+    **Example:**
+	  
+	  interface.download_image_by_pixel_count(bbox="39.7530, -104.9962, 39.7580, -104.9912", height=512, width=512, srsname="EPSG:3857")
 
 #### img_format (str):
 

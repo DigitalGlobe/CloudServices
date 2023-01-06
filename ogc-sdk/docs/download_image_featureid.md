@@ -28,9 +28,14 @@
    
      interface.download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", identifier='932f7992a4d86a9ca412c024c22792ce', gridoffsets='.0000045,.0000045', img_format='png')
 
-   
-     
+#### srsname (str):
 
+  Desired projection. Defaults to "EPSG:4326".
+
+    **Example:**
+	
+      	interface.download_image(bbox="39.7530, -104.9962, 39.7580, -104.9912", identifier='932f7992a4d86a9ca412c024c22792ce', gridoffsets='.0000045,.0000045', srsname="EPSG:3857")
+     
 #### img_format (str):
 
   The `img_format` is the desired format of the returned object. Available options include **jpeg**, **png**, or **geotiff**

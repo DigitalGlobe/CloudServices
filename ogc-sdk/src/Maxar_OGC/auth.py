@@ -1,6 +1,7 @@
 import os
 import base64
 import requests
+import random
 
 
 class Auth:
@@ -22,7 +23,7 @@ class Auth:
         self.connect_id = connectid
         self.username = username
         self.password = password
-        self.version = '1.2.0'
+        self.version = 'python_2.0_1.3.0'
 
         if not self.base_url:
             dir_path = os.path.expanduser('~')
@@ -77,9 +78,14 @@ class Auth:
         if (not self.username and self.password) or (not self.password and self.username):
             raise Exception('Username and Password must both be provided.')
 
-        url = "{}catalogservice/wfsaccess?" \
-              "REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0&CONNECTID={}&SDKversion={}".format(host,connectid,sdk_version)
+        #create random string to prevent caching
+        letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        randomLetters = ''.join(random.choices(letters, k=6))
+
+        testBBOX = '33.204230,-92.672525,33.210711,-92.656228' #this is over the ocean to ensure no images get selected and speed
+        url = "{}catalogservice/wfsaccess?REQUEST=GetFeature&TYPENAME=DigitalGlobe:FinishedFeature&SERVICE=WFS&VERSION=2.0.0&CONNECTID={}&BBOX={}&SRSNAME=EPSG:4326&SDKversion={}&random={}".format(host,connectid,testBBOX,sdk_version,randomLetters)
         response = requests.request("GET", url, headers=headers)
+
         if response.status_code != 200:
             raise Exception('Unable to connect. Status code equals {}'.format(response.status_code))
 
@@ -98,3 +104,4 @@ class Auth:
         encode = str(base64.b64encode(bytes(auth, 'utf-8')))
         encode = encode[2:-1]
         return str(encode)
+
