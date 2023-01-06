@@ -22,7 +22,13 @@
 
      interface.download_tiles(bbox="39.7530, -104.9962, 39.7580, -104.9912", zoom_level=15, img_format='png')
 
-   
+#### srsname (str):
+
+  Desired projection. Defaults to "EPSG:4326".
+
+    **Example:**
+
+      interface.download_tiles(bbox="39.7530, -104.9962, 39.7580, -104.9912", zoom_level=15, srsname="EPSG:3857)
      
 
 #### img_format (str):

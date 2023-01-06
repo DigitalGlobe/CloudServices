@@ -2,7 +2,6 @@ import requests
 import Maxar_OGC.process as process
 
 
-
 class WMS:
     def __init__(self, session):
         self.base_url = session['base_url'] + "mapservice/wmsaccess"
@@ -11,8 +10,6 @@ class WMS:
         self.response = None
         self.version = session['version']
         self.querystring = self._init_querystring()
-
-
 
     def return_image(self, **kwargs):
         """
@@ -25,25 +22,38 @@ class WMS:
             layers = String representing the called upon layer. Defaults to 'DigitalGlobe:Imagery'
             format = String of the format of the response image either jpeg, png or geotiff
             featureprofile = String of the desired stacking profile. Defaults to account Default
+            srsname (string) = Desired projection. Defaults to EPSG:4326
         Returns:
             requests response object of desired image
         """
+
         if kwargs['width'] < 0 or kwargs['width'] > 8000:
             raise Exception("Invalid value for width parameter (max 8000)")
         if kwargs['height'] < 0 or kwargs['height'] > 8000:
             raise Exception("Invalid value for height parameter (max 8000)")
         self.querystring = self._init_querystring()
+
         keys = list(kwargs.keys())
         if 'bbox' in keys:
-            process._validate_bbox(kwargs['bbox'])
+            process._validate_bbox(kwargs['bbox'], srsname=kwargs['srsname'])
+            if kwargs['srsname'] == "EPSG:4326":
+                bbox_list = [i for i in kwargs['bbox'].split(',')]
+                kwargs['bbox'] = ",".join([bbox_list[0], bbox_list[1], bbox_list[2], bbox_list[3]])
+            else:
+                bbox_list = [i for i in kwargs['bbox'].split(',')]
+                kwargs['bbox'] = ",".join([bbox_list[1], bbox_list[0], bbox_list[3], bbox_list[2]])
+                self.querystring['crs'] = kwargs['srsname']
             self.querystring.update({'bbox': kwargs['bbox']})
         else:
             raise Exception('Search function must have a BBOX.')
         if 'filter' in keys:
+            process.cql_checker(kwargs.get('filter'))
             self.querystring.update({'coverage_cql_filter': kwargs['filter']})
             del (kwargs['filter'])
+        del (kwargs['srsname'])
         for key, value in kwargs.items():
             self.querystring[key] = value
+
         request = requests.get(self.base_url, headers=self.headers, params=self.querystring)
         self.response = request
         return process._response_handler(self.response)

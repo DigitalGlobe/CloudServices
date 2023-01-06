@@ -12,7 +12,7 @@ class WCS:
         self.version = session['version']
         self.querystring = self._init_querystring()
 
-    def return_image(self, bbox, identifier, gridoffsets, **kwargs):
+    def return_image(self, bbox, identifier, gridoffsets, srsname="EPSG:4326", **kwargs):
         """
         Function finds the imagery matching a bbox or feature id
         Kwargs:
@@ -23,17 +23,25 @@ class WCS:
             identifier = String of the feature id to be returned.
             format = String of the format of the response image either jpeg, png or geotiff
             featureprofile = String of the desired stacking profile. Defaults to account Default
+            srsname (string) = Desired projection. Defaults to EPSG:4326
         Returns:
             requests response object of desired image
         """
 
         self.querystring = self._init_querystring()
         keys = list(kwargs.keys())
-        process._validate_bbox(bbox)
+        process._validate_bbox(bbox, srsname=srsname)
+        if 'filter' in kwargs:
+            process.cql_checker(kwargs.get('filter'))
         self.querystring.update({'boundingbox': bbox})
         self.querystring.update({'identifier': identifier})
         self.querystring.update({'gridoffsets': gridoffsets})
-
+        if srsname != "EPSG:4326":
+            self.querystring['gridcrs'] = "urn:ogc:def:crs:EPSG::{}".format(srsname[5:])
+            self.querystring.update({'gridbasecrs': 'urn:ogc:def:crs:EPSG::{}'.format(srsname[5:])})
+            bbox_list = [i for i in bbox.split(',')]
+            bbox = ",".join([bbox_list[1], bbox_list[0], bbox_list[3], bbox_list[2], srsname])
+            self.querystring.update({'boundingbox': bbox})
         if 'filter' in keys:
             self.querystring.update({'coverage_cql_filter': kwargs['filter']})
             del (kwargs['filter'])

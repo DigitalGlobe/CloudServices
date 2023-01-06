@@ -45,6 +45,14 @@
 	
 	 interface.get_full_res_image(featureid='932f7992a4d86a9ca412c024c22792ce', img_size=512)
 	 
+#### srsname (str):
+
+  Desired projection. Defaults to "EPSG:4326".
+  
+    **Example:**
+	
+	  interface.get_full_res_image(featureid='932f7992a4d86a9ca412c024c22792ce', srsname="EPSG:3857")
+	 
 	 
 ## Kwargs:	 
 	 

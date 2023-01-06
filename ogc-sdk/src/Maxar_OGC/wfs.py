@@ -11,11 +11,12 @@ class WFS:
         self.version = session['version']
         self.querystring = self._init_querystring()
 
-    def search(self, typename='FinishedFeature', **kwargs):
+    def search(self, typename='FinishedFeature', srsname='EPSG:4326', **kwargs):
         """
         Function searches using the wfs method.
         Args:
             typename = String of the typename. Defaults to 'FinishedFeature'. Example input 'MaxarCatalogMosaicProducts'
+            srsname (string) = Desired projection. Defaults to EPSG:4326
         Kwargs:
             bbox = String bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             filter = CQL filter used to refine data of search.
@@ -30,23 +31,39 @@ class WFS:
         process._check_typeName(typename)
         self.querystring.update({'typename': 'DigitalGlobe:{}'.format(typename)})
         keys = list(kwargs.keys())
-        if kwargs['filter']:
-            if kwargs['bbox']:
-                process._validate_bbox(kwargs['bbox'])
-                bbox_list = [i for i in kwargs['bbox'].split(',')]
-                coords = ','.join(bbox_list[:4])
-                process._validate_bbox(coords)
-                self._combine_bbox_and_filter(kwargs['filter'], kwargs['bbox'], typename)
-                del(kwargs['filter'])
-                del(kwargs['bbox'])
+        if 'filter' in keys and kwargs['filter']:
+            process.cql_checker(kwargs.get('filter'))
+            if 'bbox' in keys and kwargs['bbox']:
+                if srsname == "EPSG:4326":
+                    process._validate_bbox(kwargs['bbox'], srsname=srsname)
+                    self._combine_bbox_and_filter(kwargs['filter'], kwargs['bbox'], typename)
+                    del (kwargs['filter'])
+                    del (kwargs['bbox'])
+                else:
+                    process._validate_bbox(kwargs['bbox'], srsname=srsname)
+                    bbox_list = [i for i in kwargs['bbox'].split(',')]
+                    self.querystring['srsname'] = srsname
+                    srsname = "'" + srsname + "'"
+                    kwargs['bbox'] = ",".join([bbox_list[1], bbox_list[0], bbox_list[3], bbox_list[2], srsname])
+                    self._combine_bbox_and_filter(kwargs['filter'], kwargs['bbox'], typename)
+                    del (kwargs['filter'])
+                    del (kwargs['bbox'])
             else:
+                if not srsname:
+                    self.querystring['srsname'] = "EPSG:4326"
+                else:
+                    self.querystring['srsname'] = srsname
                 self.querystring.update({'cql_filter': kwargs['filter']})
                 del (kwargs['filter'])
         elif kwargs['bbox']:
-            process._validate_bbox(kwargs['bbox'])
-            self.querystring.update({'bbox': kwargs['bbox']})
-
-            del(kwargs['bbox'])
+            process._validate_bbox(kwargs['bbox'], srsname=srsname)
+            if srsname == "EPSG:4326":
+                bbox_list = [i for i in kwargs['bbox'].split(',')]
+                kwargs['bbox'] = ",".join([bbox_list[0], bbox_list[1], bbox_list[2], bbox_list[3]])
+            else:
+                bbox_list = [i for i in kwargs['bbox'].split(',')]
+                kwargs['bbox'] = ",".join([bbox_list[1], bbox_list[0], bbox_list[3], bbox_list[2], srsname])
+                self.querystring['srsname'] = srsname
         elif 'request' in keys:
             if kwargs['request'] == 'DescribeFeatureType':
                 self.querystring.update({'request': kwargs['request']})
@@ -63,7 +80,6 @@ class WFS:
         return process._response_handler(self.response)
 
     def _combine_bbox_and_filter(self, filter, bbox, typename):
-
         if 'MaxarCatalogMosaic' in typename:
             bbox_geometry = 'BBOX(shape,{})'.format(bbox)
             combined_filter = bbox_geometry + 'AND' + '(' + filter + ')'

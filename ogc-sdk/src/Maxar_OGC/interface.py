@@ -10,8 +10,6 @@ import requests
 import warnings
 from concurrent.futures import as_completed
 from PIL import Image
-#import rasterio
-#from rasterio.merge import merge
 from bs4 import BeautifulSoup as bs
 
 
@@ -48,11 +46,12 @@ class Interface:
         self.wmts = WMTS(self._session)
         self.wcs = WCS(self._session)
 
-    def search(self, bbox=None, filter=None, shapefile=False, csv=False, **kwargs):
+    def search(self, bbox=None, srsname="EPSG:4326", filter=None, shapefile=False, csv=False, **kwargs):
         """
         Function searches using the wfs method.
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            srsname (string) = Desired projection. Defaults to EPSG:4326
             filter (string) = CQL filter used to refine data of search.
             shapefile (bool) = Binary of whether or not to return as shapefile format
             csv (bool) = Binary of whether or not to return as csv format
@@ -63,13 +62,14 @@ class Interface:
         Returns:
             Response is either a list of features or a shapefile of all features and associated metdata.
         """
-
+        if filter:
+            process.cql_checker(filter)
         if shapefile:
-            result = self.wfs.search(bbox=bbox, filter=filter, outputformat='shape-zip', **kwargs)
+            result = self.wfs.search(bbox=bbox, filter=filter, srsname=srsname, outputformat='shape-zip', **kwargs)
         elif csv:
-            result = self.wfs.search(bbox=bbox, filter=filter, outputformat='csv', **kwargs)
+            result = self.wfs.search(bbox=bbox, filter=filter, srsname=srsname, outputformat='csv', **kwargs)
         else:
-            result = self.wfs.search(bbox=bbox, filter=filter, **kwargs)
+            result = self.wfs.search(bbox=bbox, filter=filter, srsname=srsname, **kwargs)
         if bbox:
             if shapefile:
                 if 'download_path' in kwargs.keys():
@@ -106,13 +106,14 @@ class Interface:
             else:
                 return result.json()['features']
 
-    def download_image(self, bbox=None, height=None, width=None, img_format=None, identifier=None,
+    def download_image(self, bbox=None, srsname="EPSG:4326", height=None, width=None, img_format=None, identifier=None,
                        gridoffsets=None, zoom_level=None, download=True, outputpath=None, display=True,
                        **kwargs):
         """
         Function downloads the image using the wms method.
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            srsname (string) = Desired projection. Defaults to EPSG:4326
             height (int) = The vertical number of pixels to return
             width (int) = The horizontal number of pixels to return
             img_format (string) = The format of the response image either jpeg, png or geotiff
@@ -136,14 +137,14 @@ class Interface:
             if not bbox:
                 raise Exception('zoom_level must have a bbox')
             else:
-                process._validate_bbox(bbox)
-                wmts_list = self.wmts.wmts_bbox_get_tile_list(zoom_level, bbox)
+                process._validate_bbox(bbox, srsname=srsname)
+                wmts_list = self.wmts.wmts_bbox_get_tile_list(zoom_level, bbox, crs=srsname)
                 return wmts_list
         elif identifier:
             if not gridoffsets or not bbox:
                 raise Exception('Identifiers must have gridoffset and bbox')
             else:
-                result = self.wcs.return_image(bbox, identifier, gridoffsets)
+                result = self.wcs.return_image(bbox, identifier, gridoffsets, srsname=srsname)
                 if outputpath:
                     file_name = process.download_file(result, download_path=outputpath)
                 else:
@@ -153,8 +154,8 @@ class Interface:
             if not bbox or not img_format or not width or not height:
                 raise Exception('height/width must have a bbox and an img_format')
             else:
-                process._validate_bbox(bbox)
-                result = self.wms.return_image(bbox=bbox, format=img_formatted, height=height, width=width, **kwargs)
+                process._validate_bbox(bbox, srsname=srsname)
+                result = self.wms.return_image(bbox=bbox, srsname=srsname, format=img_formatted, height=height, width=width, **kwargs)
         if display:
             process._display_image(result)
         if download:
@@ -190,26 +191,28 @@ class Interface:
             file_name = process.download_file(result, format_response=img_format)
         return f"Downloaded file {file_name}"
 
-    def get_tile_list_with_zoom(self, bbox, zoom_level):
+    def get_tile_list_with_zoom(self, bbox, zoom_level, srsname="EPSG:4326"):
         """
         Function acquires a list of tile calls dependent on the desired bbox and zoom level
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             zoom_level (int) = The zoom level
+            srsname (string) = Desired projection. Defaults to EPSG:4326
         Returns:
             List of individual tile calls for desired bbox and zoom level
         """
 
-        process._validate_bbox(bbox)
-        wmts_list = self.wmts.wmts_bbox_get_tile_list(zoom_level, bbox)
+        process._validate_bbox(bbox, srsname=srsname)
+        wmts_list = self.wmts.wmts_bbox_get_tile_list(zoom_level, bbox, crs=srsname)
         return wmts_list
 
-    def download_tiles(self, bbox, zoom_level, img_format='jpeg', outputpath=None, display=False):
+    def download_tiles(self, bbox, zoom_level, srsname="EPSG:4326", img_format='jpeg', outputpath=None, display=False):
         """
         Function downloads all tiles within a bbox dependent on zoom level
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             zoom_level (int) = The zoom level
+            srsname (string) = Desired projection. Defaults to EPSG:4326
             img_format (string) = The format of the response image either jpeg, png or geotiff
             outputpath (string) = Output path must include output format. Downloaded path default is user home path.
             display (bool) = Display image in IDE (Jupyter Notebooks only)
@@ -217,7 +220,7 @@ class Interface:
             Message displaying success and location of downloaded tiles
         """
         process._check_image_format(img_format)
-        wmts = self.get_tile_list_with_zoom(bbox, zoom_level)[1]
+        wmts = self.get_tile_list_with_zoom(bbox, zoom_level, srsname=srsname)[1]
         if outputpath:
             extension = outputpath.split(".")[-1]
             base_file = outputpath.replace("." + extension, "")
@@ -225,7 +228,7 @@ class Interface:
             extension = img_format
             base_file = os.getcwd() + "\\Download"
         for tile in wmts:
-            response = self.wmts.wmts_get_tile(tile[0], tile[1], tile[2])
+            response = self.wmts.wmts_get_tile(tile[0], tile[1], tile[2], crs=srsname)
             if display:
                 process._display_image(response)
             filename = "{}_{}_{}_{}.{}".format(base_file, tile[0], tile[1], tile[2], extension)
@@ -233,14 +236,15 @@ class Interface:
                 f.write(response.content)
         return "Download complete, files are located in {}".format(base_file)
 
-    def download_image_with_feature_id(self, bbox, identifier, gridoffsets, img_format='jpeg', display=True,
-                                       outputpath=None):
+    def download_image_with_feature_id(self, bbox, identifier, gridoffsets, srsname="EPSG:4326", img_format='jpeg',
+                                       display=True, outputpath=None):
         """
         Function downloads the image and metadata of desired feature id
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             identifier (string) = Desired feature id
             gridoffsets (string) = The pixel size to be returned in X and Y dimensions
+            srsname (string) = Desired projection. Defaults to EPSG:4326
             img_format (string) = The format of the response image either jpeg, png or geotiff
             outputpath (string) = Output path must include output format. Downloaded path default is user home path.
         Returns:
@@ -248,7 +252,7 @@ class Interface:
         """
 
         process._check_image_format(img_format)
-        result = self.wcs.return_image(bbox, identifier, gridoffsets)
+        result = self.wcs.return_image(bbox, identifier, gridoffsets, srsname=srsname)
 
         if display:
             process._display_image(result)
@@ -259,14 +263,15 @@ class Interface:
             file_name = process.download_file(result, format_response=img_format)
         return self.wcs.parse_coverage(file_name)
 
-    def download_image_by_pixel_count(self, bbox, height, width, img_format='jpeg', outputpath=None, display=False,
-                                      **kwargs):
+    def download_image_by_pixel_count(self, bbox, height, width, srsname="EPSG:4326", img_format='jpeg', outputpath=None,
+                                      display=False, **kwargs):
         """
         Function downloads the image of desired bbox dependent on pixel height and width
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             height (int) = The vertical number of pixels to return
             width (int) = The horizontal number of pixels to return
+            srsname (string) = Desired projection. Defaults to EPSG:4326
             img_format (string) = The format of the response image either jpeg, png or geotiff
             outputpath (string) = Output path must include output format. Downloaded path default is user home path.
             display (bool) = Display image in IDE (Jupyter Notebooks only)
@@ -279,8 +284,8 @@ class Interface:
         """
 
         img_formatted = process._check_image_format(img_format)
-        process._validate_bbox(bbox)
-        result = self.wms.return_image(bbox=bbox, format=img_formatted, height=height, width=width, **kwargs)
+        process._validate_bbox(bbox, srsname=srsname)
+        result = self.wms.return_image(bbox=bbox, srsname=srsname, format=img_formatted, height=height, width=width, **kwargs)
         if display:
             process._display_image(result)
 
@@ -290,15 +295,15 @@ class Interface:
             file_name = process.download_file(result, format_response=img_format)
         return "Downloaded file {}".format(file_name)
 
-    def band_manipulation(self, bbox, featureid, band_combination, height=256, width=256, img_format='jpeg',
-                          display=True,
-                          outputpath=None):
+    def band_manipulation(self, bbox, featureid, band_combination, srsname="EPSG:4326", height=256, width=256,
+                          img_format='jpeg', display=True, outputpath=None):
         """
         Function changes the bands of the feature id passed in.
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
             featureid (string) = The id of the image
             band_combination (list[string]) = The desired band combination of 1-4 items.
+            srsname (string) = Desired projection. Defaults to EPSG:4326
             height (int) = The vertical number of pixels to return
             width (int) = The horizontal number of pixels to return
             image_format (string) = The file type that you want downloaded.
@@ -309,79 +314,26 @@ class Interface:
 
         band_string = self._band_check(featureid, band_combination)
         feature_id_filter = "featureId='{}'".format(featureid)
-        message = self.download_image_by_pixel_count(bbox, height, width, img_format, outputpath=outputpath,
-                                                     display=display,
-                                                     filter=feature_id_filter, bands=band_string)
+        message = self.download_image_by_pixel_count(bbox, height, width, srsname=srsname, img_format=img_format,
+                                                     outputpath=outputpath, display=display, filter=feature_id_filter,
+                                                     bands=band_string)
         return message
 
-    def get_full_res_image(self, featureid, thread_number=100, bbox=None, mosaic=False, img_size=1024, **kwargs):
+    def get_image_from_csv(self, featureid, img_size=1024, **kwargs):
         """
-        Function takes in a feature id and breaks the image up into 1024x1024 tiles, then places a number of calls
-        based on multithreading percentages to return a full image strip in multiple tiles
+        Function reruns requests for images that previously failed, from a csv file
         Args:
             featureid (string) = Feature id of the image
-            thread_number (int) = Number of threads given to multithread functionality
-            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
-            mosaic (bool) = Flag if image files are mosaiced
             img_size (int) = Desired pixel resolution (size x size). Defaults to 1024
         kwargs:
             outputdirectory (string) = Desired output location for tiles
-            image_format (string) = Desired image format (png or jpeg)
         Returns:
             None
         """
-
-        if bbox:
-            process._validate_bbox(bbox)
-        wfs_request = self.search(filter="featureId='{}'".format(featureid))
-        image_bbox = wfs_request[0]['geometry']['coordinates'][0]
-        x_coords = [x[0] for x in image_bbox]
-        y_coords = [y[1] for y in image_bbox]
-
-        miny = min(y_coords)
-        maxy = max(y_coords) + 0.0042176
-        minx = min(x_coords)
-        maxx = max(x_coords) + 0.0054932
-
-        if bbox:
-            bbox_order = bbox.split(',')
-            miny = max(miny, float(bbox_order[0]))
-            maxy = min(maxy, float(bbox_order[2]))
-            minx = max(minx, float(bbox_order[1]))
-            maxx = min(maxx, float(bbox_order[3]))
-
-        y_list = []
-        x_list = []
-        while miny < maxy:
-            y_list.append(miny)
-            miny += 0.0042176
-        while minx < maxx:
-            x_list.append(minx)
-            minx += 0.0054932
-        tiles = {}
-
-        if len(y_list) == 1:
-            if len(x_list) == 1:
-                tiles['c{}_r{}'.format(0, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[0],
-                                                                        y_list[0] + 0.0042176, x_list[0] + 0.0054932)
-            else:
-                for x in range(len(x_list) - 1):
-                    tiles['c{}_r{}'.format(x, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[x], y_list[0] + 0.0042176,
-                                                                            x_list[x + 1])
-        elif len(x_list) == 1:
-            for y in reversed(range(len(y_list) - 1)):
-                tiles['c{}_r{}'.format(0, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[0],
-                                                                                          y_list[y + 1],
-                                                                                          x_list[0] + 0.0054932)
+        if 'outputdirectory' not in kwargs.keys():
+            outputdirectory = os.path.expanduser('~')
         else:
-            for y in reversed(range(len(y_list) - 1)):
-                for x in range(len(x_list) - 1):
-                    tiles['c{}_r{}'.format(x, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
-                                                                                              y_list[y + 1],
-                                                                                              x_list[x + 1])
-
-        print("Started full image download process...")
-
+            outputdirectory = kwargs['outputdirectory']
         url = self.wms.base_url
         headers = self.wms.headers
         querstring = self.wms.querystring
@@ -393,6 +345,177 @@ class Interface:
             querstring['format'] = 'image/{}'.format(format)
         else:
             format = querstring['format'][6:]
+        failed_reqs = []
+        with open(os.path.join(outputdirectory, 'failed_tiles.csv'), "r") as csvfile:
+            request_reader = csv.reader(csvfile, delimiter=',')
+            for row in request_reader:
+                for r in row:
+                    sub_bbox1, sub_bbox2, sub_bbox3, sub_bbox4, sub_grid_cell_location = r.split(", ")
+                    sub_bbox = sub_bbox1 + ", " + sub_bbox2 + ", " + sub_bbox3 + ", " + sub_bbox4
+                    sub_query = querstring.copy()
+                    sub_query['bbox'] = sub_bbox
+                    sub_response = requests.request("GET", url, params=sub_query, headers=headers)
+                    if sub_response.status_code == 200:
+                        sub_output = os.path.join(outputdirectory,
+                                                      sub_grid_cell_location + ".{}".format(format))
+                        process.download_file(sub_response, download_path=sub_output)
+                        print('request from csv succeeded for image ' + sub_grid_cell_location)
+                    else:
+                        print('request from csv failed for image ' + sub_grid_cell_location)
+                        failed_reqs.append(r)
+        csvfile.close()
+        os.remove(os.path.join(outputdirectory, 'failed_tiles.csv'))
+        if len(failed_reqs) > 0:
+            with open(os.path.join(outputdirectory, 'failed_tiles.csv'), "w", newline='') as csvfile:
+                tile_writer = csv.writer(csvfile, delimiter=',')
+                for fr in failed_reqs:
+                    tile_writer.writerow([fr])
+
+    def get_full_res_image(self, featureid, thread_number=100, bbox=None, mosaic=False, img_size=1024,
+                           srsname='EPSG:4326', **kwargs):
+        """
+        Function takes in a feature id and breaks the image up into 1024x1024 tiles, then places a number of calls
+        based on multithreading percentages to return a full image strip in multiple tiles
+        Args:
+            featureid (string) = Feature id of the image
+            thread_number (int) = Number of threads given to multithread functionality
+            bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            mosaic (bool) = Flag if image files are mosaiced
+            img_size (int) = Desired pixel resolution (size x size). Defaults to 1024
+            srsname (string) = Desired projection. Defaults to EPSG:4326
+        kwargs:
+            outputdirectory (string) = Desired output location for tiles
+            image_format (string) = Desired image format (png or jpeg)
+        Returns:
+            None
+        """
+
+        if bbox:
+            process._validate_bbox(bbox, srsname=srsname)
+        filter = "featureId='{}'".format(featureid)
+        wfs_request = self.search(filter=filter, srsname=srsname)
+        image_bbox = wfs_request[0]['geometry']['coordinates'][0]
+        x_coords = [x[0] for x in image_bbox]
+        y_coords = [y[1] for y in image_bbox]
+
+        if srsname == "EPSG:4326":
+            miny = min(y_coords)
+            maxy = max(y_coords) + 0.0042176
+            minx = min(x_coords)
+            maxx = max(x_coords) + 0.0054932
+        else:
+            miny = min(y_coords)
+            maxy = max(y_coords) + 468.1536
+            minx = min(x_coords)
+            maxx = max(x_coords) + 468.1536
+
+        if bbox:
+            bbox_order = bbox.split(',')
+            if srsname == "EPSG:4326":
+                miny = max(miny, float(bbox_order[0]))
+                maxy = min(maxy, float(bbox_order[2])) + 0.0042176
+                minx = max(minx, float(bbox_order[1]))
+                maxx = min(maxx, float(bbox_order[3])) + 0.0054932
+            else:
+                miny = max(miny, float(bbox_order[0]))
+                maxy = min(maxy, float(bbox_order[2])) + 468.1536
+                minx = max(minx, float(bbox_order[1]))
+                maxx = min(maxx, float(bbox_order[3])) + 468.1536
+
+        y_list = []
+        x_list = []
+
+        if srsname == "EPSG:4326":
+            while miny < maxy:
+                y_list.append(miny)
+                miny += 0.0042176
+            while minx < maxx:
+                x_list.append(minx)
+                minx += 0.0054932
+            tiles = {}
+
+            if len(y_list) == 1:
+                if len(x_list) == 1:
+                    tiles['c{}_r{}'.format(0, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[0],
+                                                                            y_list[0] + 0.0042176, x_list[0] + 0.0054932)
+                else:
+                    for x in range(len(x_list) - 1):
+                        tiles['c{}_r{}'.format(x, 0)] = '{}, {}, {}, {}'.format(y_list[0], x_list[x], y_list[0] + 0.0042176,
+                                                                                x_list[x + 1])
+            elif len(x_list) == 1:
+                for y in reversed(range(len(y_list) - 1)):
+                    tiles['c{}_r{}'.format(0, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[0],
+                                                                                              y_list[y + 1],
+                                                                                              x_list[0] + 0.0054932)
+            else:
+                for y in reversed(range(len(y_list) - 1)):
+                    for x in range(len(x_list) - 1):
+                        tiles['c{}_r{}'.format(x, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(y_list[y], x_list[x],
+                                                                                                  y_list[y + 1],
+                                                                                                  x_list[x + 1])
+
+        else:
+            while miny < maxy:
+                y_list.append(miny)
+                # How many decimal degrees being incremented by, converted DD to Meters, which is 111km is 1DD at the equator
+                # 111 * 0.0042176 is equal to 0.4681536 km then multiplied by 1000 to get 468.1536 Meters
+                miny += 468.1536
+            while minx < maxx:
+                x_list.append(minx)
+                minx += 468.1536
+            tiles = {}
+
+            if len(y_list) == 1:
+                if len(x_list) == 1:
+                    tiles['c{}_r{}'.format(0, 0)] = '{}, {}, {}, {}'.format(x_list[0], y_list[0],
+                                                                            x_list[0] + 468.1536, y_list[0] + 468.1536)
+                else:
+                    for x in range(len(x_list) - 1):
+                        tiles['c{}_r{}'.format(x, 0)] = '{}, {}, {}, {}'.format(x_list[x], y_list[0],
+                                                                                x_list[x + 1], y_list[0] + 468.1536)
+            elif len(x_list) == 1:
+                for y in reversed(range(len(y_list) - 1)):
+                    tiles['c{}_r{}'.format(0, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(x_list[0], y_list[y],
+                                                                                              x_list[0] + 468.1536,
+                                                                                              y_list[y + 1])
+            else:
+                for y in reversed(range(len(y_list) - 1)):
+                    for x in range(len(x_list) - 1):
+                        tiles['c{}_r{}'.format(x, len(y_list) - y - 2)] = '{}, {}, {}, {}'.format(x_list[x], y_list[y],
+                                                                                                  x_list[x + 1],
+                                                                                                  y_list[y + 1])
+
+        print("Started full image download process...")
+
+        #This section deletes bboxes that don't cover the image from Tiles
+        wfs_Response = self.wfs.search(filter=filter, srsname=srsname)
+        keysToDel = []
+        for tile, bbox in tiles.items():
+            if srsname == "EPSG:4326":
+                bbox_coverage = process.aoi_coverage(bbox, wfs_Response)['features'][0]['coverage']
+            else:
+                bbox_list = [i for i in bbox.split(',')]
+                bbox = ",".join([bbox_list[1], bbox_list[0], bbox_list[3], bbox_list[2], srsname])
+                bbox_coverage = process.aoi_coverage(bbox + ",{}".format(srsname), wfs_Response)['features'][0]['coverage']
+            if bbox_coverage == 0.0:
+                keysToDel.append(tile)
+
+        for tileKey in keysToDel:
+            del tiles[tileKey]
+
+        url = self.wms.base_url
+        headers = self.wms.headers
+        querstring = self.wms.querystring
+        querstring['crs'] = srsname
+        querstring['width'] = img_size
+        querstring['height'] = img_size
+        querstring['coverage_cql_filter'] = "featureId='{}'".format(featureid)
+        if 'image_format' in kwargs.keys():
+            format = kwargs['image_format']
+            querstring['format'] = 'image/{}'.format(format)
+        else:
+            format = querstring['format'][6:]
+
 
         def response_thread(coord_list):
             """
@@ -402,12 +525,68 @@ class Interface:
             Returns:
                 List of cell locations and corresponding response objects
             """
+            failed_request = []
             sub_bbox, sub_grid_cell_location = coord_list.split("|")
             sub_query = querstring.copy()
             sub_query['bbox'] = sub_bbox
             sub_response = requests.request("GET", url, params=sub_query, headers=headers)
-            return [sub_grid_cell_location, sub_response]
+            if sub_response.status_code != 200:
+                failed_request.append(coord_list)
+            return [sub_grid_cell_location, sub_response, failed_request]
 
+
+        def split_array_and_send_requests(array, num_attempts):
+            """
+
+            Function splits the array into chucks and executes the response_thread function using the
+            thread pool executor, then downloads the image file if the request is successful. If requests
+            fail, the function retries requests for those tiles until they succeed
+
+            Args:
+                array (list) = List of tiles with corresponding coordinates
+                num_attempts (int) = Number of times rerunning the requests has been attempted
+
+            """
+
+            failed_reqs = []
+            chunk_size = thread_number * 5
+            chunk_count = int(len(array) / chunk_size)
+
+            for i in range(chunk_count + 1):
+                if i == chunk_count:
+                    sub_array = array[i * chunk_size:]
+                else:
+                    sub_array = array[i * chunk_size:(i + 1) * chunk_size]
+                with process.BoundedThreadPoolExecutor(max_workers=thread_number) as executor:
+                    futures = [executor.submit(response_thread, coords) for coords in sub_array]
+                    for future in as_completed(futures):
+                        coord, response, failed_request = future.result()
+                        if response.status_code == 200:
+                            sub_output = os.path.join(outputdirectory, coord + ".{}".format(format))
+                            process.download_file(response, download_path=sub_output)
+                        else:
+                            for fr in failed_request:
+                                failed_reqs.append(fr)
+                print('Finished section {} out of {}'.format(i + 1, chunk_count + 1))
+                print('\r')
+            if len(failed_reqs) > 0:
+                if num_attempts < 10:
+                    num_attempts += 1
+                    print('Some image requests failed, retrying failed requests, retry attempt {}'.format(num_attempts))
+                    print('\r')
+                    split_array_and_send_requests(failed_reqs, num_attempts)
+                else:
+                    print('Attempted failed image requests 10 times, will print failed requests to csv and retry')
+                    print('\r')
+                    with open(os.path.join(outputdirectory, 'failed_tiles.csv'), "w", newline='') as csvfile:
+                        failed_tile_writer = csv.writer(csvfile, delimiter=',')
+                        for fr in failed_reqs:
+                            row_content = fr.replace("|", ", ")
+                            failed_tile_writer.writerow([row_content])
+                    csvfile.close()
+            failed_reqs.clear()
+            print('\r')
+            print('\n')
 
         multithreading_array = ["{}|{}".format(k, j) for j, k in list(tiles.items())]
         if 'outputdirectory' not in kwargs.keys():
@@ -420,23 +599,7 @@ class Interface:
                 value, key = line.split('|')
                 grid_coords.write('{} | {}\n'.format(key, value))
 
-        chunk_size = thread_number * 5
-        chunk_count = int(len(multithreading_array) / chunk_size)
-        for i in range(chunk_count + 1):
-            if i == chunk_count:
-                sub_array = multithreading_array[i * chunk_size:]
-            else:
-                sub_array = multithreading_array[i * chunk_size:(i + 1) * chunk_size]
-            with process.BoundedThreadPoolExecutor(max_workers=thread_number) as executor:
-                futures = [executor.submit(response_thread, coords) for coords in sub_array]
-                for future in as_completed(futures):
-                    coord, response = future.result()
-                    sub_output = os.path.join(outputdirectory, coord + ".{}".format(format))
-                    process.download_file(response, download_path=sub_output)
-            print('Finished section {} out of {}'.format(i+1, chunk_count+1))
-            print('\r')
-        print('\r')
-        print('\n')
+        split_array_and_send_requests(multithreading_array, num_attempts=0)
 
         if mosaic:
             print("Finished full image download process, output directory is: {}. Beginning mosaic process".
@@ -445,7 +608,6 @@ class Interface:
         else:
             return "Finished full image download process, output directory is: {}".\
                 format(os.path.split(outputdirectory)[0])
-
 
     def create_mosaic(self, base_dir, img_format, img_size=1024, **kwargs):
         '''
@@ -456,41 +618,81 @@ class Interface:
             img_size (int) = Size of individual image files, defaults to 1024
         Kwargs:
             outputdirectory (string) = Directory destination of finished mosaic file
+            filename (string) = filename of merged image
         Returns:
             None
         '''
-        #Commenting this out for now. Currently rasterio requires installation
-        #of Microsoft C++ Tools to work properly.
-        #if img_format == 'geotiff':
-        #     srcs_to_mosaic = []
-        #     for image in os.listdir(base_dir):
-        #         if image.endswith('.geotiff'):
-        #             raster = rasterio.open(os.path.join(base_dir, image))
-        #             srcs_to_mosaic.append(raster)
-        #             output_data = raster.meta.copy()
-        #
-        #     mosaic, output = merge(srcs_to_mosaic)
-        #     output_data.update(
-        #         {"driver": "GTiff",
-        #          "height": mosaic.shape[1],
-        #          "width": mosaic.shape[2],
-        #          "transform": output
-        #          }
-        #     )
-        #
-        #     if 'outputdirectory' in kwargs.keys():
-        #         with rasterio.open(os.path.join(kwargs['outputdirectory'], 'merged_image.geotiff'), "w", **output_data) as m:
-        #          m.write(mosaic)
-        #     else:
-        #         with rasterio.open(os.path.join(base_dir, 'merged_image.geotiff'), "w", **output_data) as m:
-        #             m.write(mosaic)
-        #
-        #else:
+
+        if img_format == 'geotiff':
+            try:
+                import rasterio
+                from rasterio.merge import merge
+            except:
+                self._pillow_mosaic(base_dir, img_format, img_size=1024, **kwargs)
+                print("GDAL is not installed on your machine. The downloaded image will not be georeferenced. "
+                              " Please refer to the Maxar_OGC documentation for steps on how to install GDAL in "
+                              "your environment.")
+            else:
+                srcs_to_mosaic = []
+                for image in os.listdir(base_dir):
+                    if image.endswith('.geotiff'):
+                        raster = rasterio.open(os.path.join(base_dir, image))
+                        srcs_to_mosaic.append(raster)
+                        output_data = raster.meta.copy()
+                mosaic, output = merge(srcs_to_mosaic)
+                output_data.update(
+                    {"driver": "GTiff",
+                     "height": mosaic.shape[1],
+                     "width": mosaic.shape[2],
+                     "transform": output
+                     }
+                )
+
+                if 'outputdirectory' in kwargs.keys():
+                    if 'filename' in kwargs.keys():
+                        with rasterio.open(os.path.join(
+                                kwargs['outputdirectory'], kwargs['filename'] + '.geotiff'), "w", **output_data) as m:
+                            m.write(mosaic)
+                        print("Finished image mosaic process, output directory is: {}".format(kwargs['outputdirectory']))
+                    else:
+                        with rasterio.open(os.path.join(
+                                kwargs['outputdirectory'], 'merged_image.geotiff'), "w", **output_data) as m:
+                            m.write(mosaic)
+                        print("Finished image mosaic process, output directory is: {}".format(kwargs['outputdirectory']))
+                else:
+                    if 'filename' in kwargs.keys():
+                        with rasterio.open(os.path.join(base_dir, kwargs['filename'] + '.geotiff'), "w", **output_data) as m:
+                            m.write(mosaic)
+                    else:
+                        with rasterio.open(os.path.join(base_dir, 'merged_image.geotiff'), "w", **output_data) as m:
+                            m.write(mosaic)
+                    print("Finished image mosaic process, output directory is: {}".format(base_dir))
+        else:
+            self._pillow_mosaic(base_dir, img_format, img_size=1024, **kwargs)
+
+    def _pillow_mosaic(self, base_dir, img_format, img_size=1024, **kwargs):
+        '''
+                Function creates a mosaic of downloaded image tiles from full_res_dowload function
+                Args:
+                    base_dir (string) = Root directory containing image files to be mosaiced
+                    img_format (string) = Image format of files
+                    img_size (int) = Size of individual image files, defaults to 1024
+                Kwargs:
+                    outputdirectory (string) = Directory destination of finished mosaic file
+                    filename (string) = filename of merged image
+                Returns:
+                    None
+                '''
+
         Image.MAX_IMAGE_PIXELS = None
         coord_list = []
         for k in [i for i in os.listdir(base_dir) if ".txt" not in i and os.path.isfile(os.path.join(base_dir, i))]:
             filename = k
             coords = k.replace('c', '').replace('_r', ',').replace('.{}'.format(img_format), '').split(',')
+            if "geotiff" in filename:
+                pre, ext = os.path.splitext(os.path.join(base_dir, filename))
+                os.rename(os.path.join(base_dir, filename), pre + ".tiff")
+                filename = filename.replace("geotiff", "tiff")
             coord_list.append([filename, int(coords[0]), int(coords[1])])
 
         max_row = max([i[2] for i in coord_list]) + 1
@@ -506,14 +708,29 @@ class Interface:
             mosaic.paste(Image.open(os.path.join(base_dir, i[0])), (column, row))
             count += 1
             if count % 100 == 0:
-                print("Processing {} of {} total".format(count, len(coord_list)))
-                print("\r")
+                sys.stdout.write("Processing {} of {} total".format(count, len(coord_list)))
+                sys.stdout.write("\r")
 
+        # must change to tiff because pillow doesnt support geotiff
+        if img_format == "geotiff":
+            img_format = "tiff"
+        # if they specify filename, give it a name. Else, call it merged image
         if 'outputdirectory' in kwargs.keys():
-            mosaic.save(r"{}\merged_image.{}".format(kwargs['outputdirectory'], img_format))
-            print("Finished image mosaic process, output directory is: {}".format(kwargs['outputdirectory']))
+            if 'filename' in kwargs.keys():
+                filepath = r"{}\{}.{}".format(kwargs['outputdirectory'], kwargs['filename'], img_format)
+                mosaic.save(filepath)
+                print("Finished image mosaic process, output directory is: {}".format(kwargs['outputdirectory']))
+            else:
+                filepath = r"{}\merged_image.{}".format(kwargs['outputdirectory'], img_format)
+                mosaic.save(filepath)
+                print("Finished image mosaic process, output directory is: {}".format(kwargs['outputdirectory']))
         else:
-            mosaic.save(r"{}\merged_image.{}".format(base_dir, img_format))
+            if 'filename' in kwargs.keys():
+                filepath = r"{}\{}.{}".format(base_dir, kwargs['filename'], img_format)
+                mosaic.save(filepath)
+            else:
+                filepath = r"{}\merged_image.{}".format(base_dir, img_format)
+                mosaic.save(filepath)
             print("Finished image mosaic process, output directory is: {}".format(base_dir))
 
     def get_filter_parameters(self, typename):
@@ -581,14 +798,15 @@ class Interface:
         return legacy_id
 
     @staticmethod
-    def calculate_sqkm(bbox):
+    def calculate_sqkm(bbox, srsname="EPSG:4326"):
         """
         Function calculates the area in square kilometers of the desired bounding box
         Args:
             bbox (string) = Bounding box of AOI. Comma delimited set of coordinates. (miny,minx,maxy,maxx)
+            srsname (string) = Desired projection. Defaults to EPSG:4326
         Returns:
             Float of bounding box area in square kilometers
         """
         
-        area = process.area_sqkm(bbox)
+        area = process.area_sqkm(bbox, srsname=srsname)
         return area
