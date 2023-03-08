@@ -11,7 +11,7 @@ class WFS:
         self.version = session['version']
         self.querystring = self._init_querystring()
 
-    def search(self, typename='FinishedFeature', srsname='EPSG:4326', **kwargs):
+    def search(self, typename='FinishedFeature', srsname='EPSG:4326', bypass_cql_checking=False, **kwargs):
         """
         Function searches using the wfs method.
         Args:
@@ -32,7 +32,8 @@ class WFS:
         self.querystring.update({'typename': 'DigitalGlobe:{}'.format(typename)})
         keys = list(kwargs.keys())
         if 'filter' in keys and kwargs['filter']:
-            process.cql_checker(kwargs.get('filter'))
+            if not bypass_cql_checking:
+                process.cql_checker(kwargs.get('filter'))
             if 'bbox' in keys and kwargs['bbox']:
                 if srsname == "EPSG:4326":
                     process._validate_bbox(kwargs['bbox'], srsname=srsname)
