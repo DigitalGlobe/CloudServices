@@ -1,4 +1,5 @@
 import os
+import sys
 
 from Maxar_OGC.auth import Auth
 from Maxar_OGC.wms import WMS
@@ -8,6 +9,7 @@ from Maxar_OGC.wcs import WCS
 import Maxar_OGC.process as process
 import requests
 import warnings
+import csv
 from concurrent.futures import as_completed
 from PIL import Image
 from bs4 import BeautifulSoup as bs
@@ -62,8 +64,8 @@ class Interface:
         Returns:
             Response is either a list of features or a shapefile of all features and associated metdata.
         """
-        if filter:
-            process.cql_checker(filter)
+        # if filter:
+        #     process.cql_checker(filter)
         if shapefile:
             result = self.wfs.search(bbox=bbox, filter=filter, srsname=srsname, outputformat='shape-zip', **kwargs)
         elif csv:
@@ -390,7 +392,7 @@ class Interface:
             None
         """
 
-        if bbox:
+        if bbox is not None:
             process._validate_bbox(bbox, srsname=srsname)
         filter = "featureId='{}'".format(featureid)
         wfs_request = self.search(filter=filter, srsname=srsname)
@@ -409,7 +411,7 @@ class Interface:
             minx = min(x_coords)
             maxx = max(x_coords) + 468.1536
 
-        if bbox:
+        if bbox is not None:
             bbox_order = bbox.split(',')
             if srsname == "EPSG:4326":
                 miny = max(miny, float(bbox_order[0]))
@@ -489,19 +491,25 @@ class Interface:
 
         #This section deletes bboxes that don't cover the image from Tiles
         wfs_Response = self.wfs.search(filter=filter, srsname=srsname)
+
+        if bbox is not None:
+            if process.aoi_coverage(bbox, wfs_Response)['features'][0]['bbox_coverage'] == 0:
+                raise Exception("Bounding box is outside of desired feature's AOI")
+
         keysToDel = []
-        for tile, bbox in tiles.items():
+        for tile, tile_bbox in tiles.items():
             if srsname == "EPSG:4326":
-                bbox_coverage = process.aoi_coverage(bbox, wfs_Response)['features'][0]['coverage']
+                bbox_coverage = process.aoi_coverage(tile_bbox, wfs_Response)['features'][0]['coverage']
             else:
-                bbox_list = [i for i in bbox.split(',')]
-                bbox = ",".join([bbox_list[1], bbox_list[0], bbox_list[3], bbox_list[2], srsname])
-                bbox_coverage = process.aoi_coverage(bbox + ",{}".format(srsname), wfs_Response)['features'][0]['coverage']
+                tile_bbox_list = [i for i in tile_bbox.split(',')]
+                sub_bbox = ",".join([tile_bbox_list[1], tile_bbox_list[0], tile_bbox_list[3], tile_bbox_list[2], srsname])
+                bbox_coverage = process.aoi_coverage(sub_bbox + ",{}".format(srsname), wfs_Response)['features'][0]['coverage']
             if bbox_coverage == 0.0:
                 keysToDel.append(tile)
 
         for tileKey in keysToDel:
             del tiles[tileKey]
+
 
         url = self.wms.base_url
         headers = self.wms.headers

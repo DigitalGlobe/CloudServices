@@ -1,10 +1,9 @@
 import os
-import pyproj
+from pyproj import Transformer
 import shapely.ops as ops
 from shapely.geometry.polygon import Polygon
 import shapely.geometry
 import shapely.wkt
-from functools import partial
 import random
 import string
 import queue
@@ -49,33 +48,27 @@ def area_sqkm(bbox, srsname="EPSG:4326"):
 
         geom = Polygon([(xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin)])
 
+        transformer = Transformer.from_crs(
+            "EPSG:4326",
+            f"+proj=aea +lat_1={geom.bounds[1]} +lat_2={geom.bounds[3]}",
+            always_xy=True)
+
         geom_area = ops.transform(
-        partial(
-            pyproj.transform,
-            pyproj.Proj(init='EPSG:4326'),
-            pyproj.Proj(
-                proj='aea',
-                lat_1=geom.bounds[1],
-                lat_2=geom.bounds[3]
-            )
-        ),
-        geom)
+            transformer.transform,
+            geom)
 
     else:
 
         geom = Polygon([(xmin, ymin), (xmin, ymax), (xmax, ymax), (xmax, ymin), (xmin, ymin)])
 
+        transformer = Transformer.from_crs(
+            srsname,
+            f"+proj=aea +lat_1={geom.bounds[1]} +lat_2={geom.bounds[3]}",
+            always_xy=True)
+
         geom_area = ops.transform(
-        partial(
-            pyproj.transform,
-            pyproj.Proj(init=srsname),
-            pyproj.Proj(
-                proj='aea',
-                lat_1=geom.bounds[1],
-                lat_2=geom.bounds[3]
-            )
-        ),
-        geom)
+            transformer.transform,
+            geom)
 
     # Print the area in sqkm^2
 
@@ -253,97 +246,97 @@ def _check_typeName(typename):
         raise Exception('{} is not an acceptable TypeName. Please use one of the following {}'.format(typename, acceptable_types))
 
 
-def cql_checker(cql_filter):
-    """
-    Function checks for the validity of a passed in cql filter
-    Args:
-        cql_filter: string representation of cql filter
-    """
-    string_list = ['featureId', 'sourceUnit', 'productType', 'groundSampleDistanceUnits', 'dataLayer', 'product_line_item',
-                   'legacyDescription', 'colorBandOrder', 'assetName', 'assetType', 'legacyId',
-                   'factoryOrderNumber', 'layer', 'crsFromPixels', 'url', 'spatialAccuracy', 'catalogIdentifier',
-                   'tileMatrixSet', 'tileMatrix', 'product_name', 'product_id', 'acquisitionTime']
-    string_date_list = ['acquisitionDate', 'ingestDate', 'collect_date_min']
-    float_list = ['groundSampleDistance', 'perPixelX', 'perPixelY', 'CE90Accuracy', 'RMSEAccuracy']
-    boolean_list = ['outputMosaic']
-    integer_list = ['ageDays', 'row', 'column']
-    source_list = ["'WV01'", "'WV02'", "'WV03_VNIR'", "'WV03'", "'WV04'", "'GE01'", "'QB02'", "'KS3'", "'KS3A'",
-                   "'WV03_SWIR'", "'KS5'", "'RS2'", "'IK02'", "'LG01'", "'LG02'"]
-    _0_360_list = ['sunAzimuth', 'offNadirAngle', 'sunElevation']
-    _0_1_list = ['cloudCover']
-    error_list = []
-    if cql_filter is None:
-        error_list.append('filter can not be None type')
-        raise Exception('CQL Filter Error:', error_list)
-    if cql_filter.find(')') < cql_filter.find('(') or cql_filter.count('(') != cql_filter.count(')'):
-        error_list.append('Incorrect parenthesis')
-    temp_list = [x.split('AND') for x in [i for i in cql_filter.split('OR')]]
-    cql_parse = [item.replace('(', '').replace(')', '') for sublist in temp_list for item in sublist]
-    for item in cql_parse:
-        if item.find('>=') > 0:
-            key, value = item.split('>=')
-        elif item.find('<=') > 0:
-            key, value = item.split('<=')
-        elif item.find('=') > 0:
-            key, value = item.split('=')
-        elif item.find('<') > 0:
-            key, value = item.split('<')
-        elif item.find('>') > 0:
-            key, value = item.split('>')
-        else:
-            error_list.append('No comparison operator e.g. < > =')
-        if key == 'source':
-            if value not in source_list:
-                error_list.append(f'{value} should be {source_list}')
-        elif key in float_list:
-            try:
-                float(value)
-            except:
-                error_list.append(f'{value} Not a float')
-        elif key in boolean_list:
-            if value != 'FALSE' and value != 'TRUE':
-                error_list.append(f'{value} should be either TRUE or FALSE')
-        elif key in integer_list:
-            try:
-                int(value)
-            except:
-                error_list.append(f'{value} Not an integer')
-        elif key in string_date_list:
-            if value[0] != "'" or value[-1] != "'":
-                error_list.append(f'{value} Need single quotes around dates')
-            value = value.replace("'", "")
-            try:
-                format_data = "%Y-%m-%d %H:%M:%S.%f"
-                datetime.strptime(value, format_data)
-            except:
-                try:
-                    format_data_2 = "%Y-%m-%d"
-                    datetime.strptime(value, format_data_2)
-                except:
-                    error_list.append(f'{value} Not a valid date')
-        elif key in string_list:
-            if value[0] != "'" or value[-1] != "'":
-                error_list.append(f'{value} Need single quotes around value')
-            if not isinstance(value, str):
-                error_list.append(f'{value} Not a valid string value')
-        elif key in _0_1_list:
-            try:
-                value = float(value)
-            except:
-                error_list.append(f'{value} Not a float')
-            if not (0 <= value <= 1):
-                error_list.append(f'{value} must be between 0 and 1')
-        elif key in _0_360_list:
-            try:
-                value = float(value)
-            except:
-                error_list.append(f'{value} Not a float')
-            if not (0 <= value <= 360):
-                error_list.append(f'{value} must be between 0 and 360')
-        else:
-            error_list.append(f'{key, value} Not a valid parameter')
-    if len(error_list) > 0:
-        raise Exception('CQL Filter Error:', error_list)
+# def cql_checker(cql_filter):
+#     """
+#     Function checks for the validity of a passed in cql filter
+#     Args:
+#         cql_filter: string representation of cql filter
+#     """
+#     string_list = ['featureId', 'sourceUnit', 'productType', 'groundSampleDistanceUnits', 'dataLayer', 'product_line_item',
+#                    'legacyDescription', 'colorBandOrder', 'assetName', 'assetType', 'legacyId',
+#                    'factoryOrderNumber', 'layer', 'crsFromPixels', 'url', 'spatialAccuracy', 'catalogIdentifier',
+#                    'tileMatrixSet', 'tileMatrix', 'product_name', 'product_id', 'acquisitionTime']
+#     string_date_list = ['acquisitionDate', 'ingestDate', 'collect_date_min']
+#     float_list = ['groundSampleDistance', 'perPixelX', 'perPixelY', 'CE90Accuracy', 'RMSEAccuracy']
+#     boolean_list = ['outputMosaic']
+#     integer_list = ['ageDays', 'row', 'column']
+#     source_list = ["'WV01'", "'WV02'", "'WV03_VNIR'", "'WV03'", "'WV04'", "'GE01'", "'QB02'", "'KS3'", "'KS3A'",
+#                    "'WV03_SWIR'", "'KS5'", "'RS2'", "'IK02'", "'LG01'", "'LG02'"]
+#     _0_360_list = ['sunAzimuth', 'offNadirAngle', 'sunElevation']
+#     _0_1_list = ['cloudCover']
+#     error_list = []
+#     if cql_filter is None:
+#         error_list.append('filter can not be None type')
+#         raise Exception('CQL Filter Error:', error_list)
+#     if cql_filter.find(')') < cql_filter.find('(') or cql_filter.count('(') != cql_filter.count(')'):
+#         error_list.append('Incorrect parenthesis')
+#     temp_list = [x.split('AND') for x in [i for i in cql_filter.split('OR')]]
+#     cql_parse = [item.replace('(', '').replace(')', '') for sublist in temp_list for item in sublist]
+#     for item in cql_parse:
+#         if item.find('>=') > 0:
+#             key, value = item.split('>=')
+#         elif item.find('<=') > 0:
+#             key, value = item.split('<=')
+#         elif item.find('=') > 0:
+#             key, value = item.split('=')
+#         elif item.find('<') > 0:
+#             key, value = item.split('<')
+#         elif item.find('>') > 0:
+#             key, value = item.split('>')
+#         else:
+#             error_list.append('No comparison operator e.g. < > =')
+#         if key == 'source':
+#             if value not in source_list:
+#                 error_list.append(f'{value} should be {source_list}')
+#         elif key in float_list:
+#             try:
+#                 float(value)
+#             except:
+#                 error_list.append(f'{value} Not a float')
+#         elif key in boolean_list:
+#             if value != 'FALSE' and value != 'TRUE':
+#                 error_list.append(f'{value} should be either TRUE or FALSE')
+#         elif key in integer_list:
+#             try:
+#                 int(value)
+#             except:
+#                 error_list.append(f'{value} Not an integer')
+#         elif key in string_date_list:
+#             if value[0] != "'" or value[-1] != "'":
+#                 error_list.append(f'{value} Need single quotes around dates')
+#             value = value.replace("'", "")
+#             try:
+#                 format_data = "%Y-%m-%d %H:%M:%S.%f"
+#                 datetime.strptime(value, format_data)
+#             except:
+#                 try:
+#                     format_data_2 = "%Y-%m-%d"
+#                     datetime.strptime(value, format_data_2)
+#                 except:
+#                     error_list.append(f'{value} Not a valid date')
+#         elif key in string_list:
+#             if value[0] != "'" or value[-1] != "'":
+#                 error_list.append(f'{value} Need single quotes around value')
+#             if not isinstance(value, str):
+#                 error_list.append(f'{value} Not a valid string value')
+#         elif key in _0_1_list:
+#             try:
+#                 value = float(value)
+#             except:
+#                 error_list.append(f'{value} Not a float')
+#             if not (0 <= value <= 1):
+#                 error_list.append(f'{value} must be between 0 and 1')
+#         elif key in _0_360_list:
+#             try:
+#                 value = float(value)
+#             except:
+#                 error_list.append(f'{value} Not a float')
+#             if not (0 <= value <= 360):
+#                 error_list.append(f'{value} must be between 0 and 360')
+#         else:
+#             error_list.append(f'{key, value} Not a valid parameter')
+#     if len(error_list) > 0:
+#         raise Exception('CQL Filter Error:', error_list)
 
 
 class BoundedThreadPoolExecutor(ThreadPoolExecutor):

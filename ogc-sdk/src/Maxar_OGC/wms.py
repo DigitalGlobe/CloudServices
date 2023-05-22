@@ -47,7 +47,7 @@ class WMS:
         else:
             raise Exception('Search function must have a BBOX.')
         if 'filter' in keys:
-            process.cql_checker(kwargs.get('filter'))
+            # process.cql_checker(kwargs.get('filter'))
             self.querystring.update({'coverage_cql_filter': kwargs['filter']})
             del (kwargs['filter'])
         del (kwargs['srsname'])

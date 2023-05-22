@@ -2,7 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 import Maxar_OGC.process as process
 import math
-from pyproj import transform, Proj
+from pyproj import Transformer
 
 class WMTS:
     def __init__(self, session):
@@ -44,9 +44,8 @@ class WMTS:
 
             return str(round((float(longx) + 180) * (int(matrixwidth)/360))), str(round((90 - float(laty)) * (int(matrixheight)/180)))
         else:
-            inProj = Proj(init=crs)
-            outProj = Proj(init='epsg:4326')
-            x2, y2 = transform(inProj, outProj, longx, laty)
+            transform = Transformer.from_crs(crs, "EPSG:4326")
+            x2, y2 = transform.transform(longx, laty)
 
             def deg2num(lat_deg, lon_deg, zoom):
                 lat_rad = math.radians(lat_deg)
