@@ -1,5 +1,10 @@
 # Release Notes
 
+## Version 1.3.1 (May 22, 2023)
+
+- Bug fixes to get_full_res function
+- CQL Checker was not allowing valid CQLs to pass, it has been removed for the time being
+
 ## Version 1.3.0 (January 6, 2023)
 - New Features
 	- Added checker to validate CQL filter. Exception will now be thrown if CQL filter format is incorrect.

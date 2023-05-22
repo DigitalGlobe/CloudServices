@@ -32,7 +32,7 @@ class WFS:
         self.querystring.update({'typename': 'DigitalGlobe:{}'.format(typename)})
         keys = list(kwargs.keys())
         if 'filter' in keys and kwargs['filter']:
-            process.cql_checker(kwargs.get('filter'))
+            # process.cql_checker(kwargs.get('filter'))
             if 'bbox' in keys and kwargs['bbox']:
                 if srsname == "EPSG:4326":
                     process._validate_bbox(kwargs['bbox'], srsname=srsname)

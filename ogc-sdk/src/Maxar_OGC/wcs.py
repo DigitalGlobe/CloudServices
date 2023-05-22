@@ -31,8 +31,8 @@ class WCS:
         self.querystring = self._init_querystring()
         keys = list(kwargs.keys())
         process._validate_bbox(bbox, srsname=srsname)
-        if 'filter' in kwargs:
-            process.cql_checker(kwargs.get('filter'))
+        # if 'filter' in kwargs:
+        #     process.cql_checker(kwargs.get('filter'))
         self.querystring.update({'boundingbox': bbox})
         self.querystring.update({'identifier': identifier})
         self.querystring.update({'gridoffsets': gridoffsets})
