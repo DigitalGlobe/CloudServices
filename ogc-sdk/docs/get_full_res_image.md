@@ -13,7 +13,7 @@
 	 
 #### thread_number (int):
 
-  The number of threads used in the download process. More threads will generally go faster but use more system resources. Defaults to 100 threads.
+  The number of threads used in the download process. More threads will generally go faster but use more system resources. Defaults to 25 threads.
 
    **Example:**
    

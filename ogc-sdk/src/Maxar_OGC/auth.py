@@ -12,34 +12,39 @@ class Auth:
     Args:
         host = desired environment
         connectid = the desired account connectid
-        username = member manager username
-        password = member manager password
+        username = username for your account
+        password = password for your account
+        sar_username = username for your sar data access
+        sar_password = password for your sar data access
+
     Returns:
         session_object = dictionary containing keys 'base_url', 'connectid', 'headers'
     """
 
-    def __init__(self, base_url=None, connectid=None, username=None, password=None):
+    def __init__(self, base_url=None, connectid=None, username=None, password=None, sar_username=None, sar_password=None):
         self.base_url = base_url  # host name "https://securewatch.maxar.com/"
         self.connect_id = connectid
         self.username = username
         self.password = password
-        self.version = 'python_2.0_1.3.1'
+        self.version = 'python_2.0_1.4.0'
+        self.sar_username = sar_username
+        self.sar_password = sar_password
 
         if not self.base_url:
             dir_path = os.path.expanduser('~')
             file = '.ogc-config'
             full_path = os.path.join(dir_path, file)
             if os.path.isfile(full_path):
-                self.base_url, self.connect_id, self.username, self.password = self._get_environment(full_path)
+                self.base_url, self.connect_id, self.username, self.password, self.sar_username, self.sar_password = self._get_environment(full_path)
             else:
                 raise ValueError("Please create .ogc-config in home dir.")
+
         else:
             acceptable_urls = ["https://securewatch.maxar.com/", "https://securewatch.digitalglobe.com/",
                                "https://access.maxar.com/", "https://services.digitalglobe.com/",
                                "https://evwhs.digitalglobe.com/"]
             if self.base_url not in acceptable_urls:
                 raise ValueError("Base_url must match acceptable Maxar url.")
-
         self.session_object = self._get_session()
         self._check_auth()
 
@@ -65,7 +70,16 @@ class Auth:
             password = cred_dict['user_password']
         except:
             password = None
-        return tenant, connectid, user_name, password
+        try:
+            sar_username = cred_dict['saruser']
+        except:
+            sar_username = None
+        try:
+            sar_password = cred_dict['sarpass']
+        except:
+            sar_password = None
+
+        return tenant, connectid, user_name, password, sar_username, sar_password
 
     def _check_auth(self):
         connectid = self.session_object['connectid']
@@ -90,17 +104,19 @@ class Auth:
             raise Exception('Unable to connect. Status code equals {}'.format(response.status_code))
 
     def _get_session(self):
-        header = {}
         session = {'base_url': self.base_url,
                    'connectid': self.connect_id,
                    'version': self.version}
         if self.username and self.password:
-            header.update({'Authorization': 'Basic {}'.format(self._encode_creds())})
+            header = {'Authorization': 'Basic {}'.format(self._encode_creds(self.username, self.password))}
+        if self.sar_username and self.sar_password:
+            sar_header = {'Authorization': 'Basic {}'.format(self._encode_creds(self.sar_username,self.sar_password))} 
+            session.update({"sar_header": sar_header})
         session.update({'headers': header})
         return session
 
-    def _encode_creds(self):
-        auth = "{}:{}".format(self.username, self.password)
+    def _encode_creds(self, username, password):
+        auth = "{}:{}".format(username, password)
         encode = str(base64.b64encode(bytes(auth, 'utf-8')))
         encode = encode[2:-1]
         return str(encode)

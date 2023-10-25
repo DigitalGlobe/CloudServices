@@ -47,6 +47,8 @@ class Interface:
         self.wfs = WFS(self._session)
         self.wmts = WMTS(self._session)
         self.wcs = WCS(self._session)
+        if "evwhs" in self._session["base_url"]:
+            self.sar_headers = self._session["sar_header"]
 
     def search(self, bbox=None, srsname="EPSG:4326", filter=None, shapefile=False, csv=False, **kwargs):
         """
@@ -373,7 +375,7 @@ class Interface:
                 for fr in failed_reqs:
                     tile_writer.writerow([fr])
 
-    def get_full_res_image(self, featureid, thread_number=100, bbox=None, mosaic=False, img_size=1024,
+    def get_full_res_image(self, featureid, thread_number=25, bbox=None, mosaic=False, img_size=1024,
                            srsname='EPSG:4326', **kwargs):
         """
         Function takes in a feature id and breaks the image up into 1024x1024 tiles, then places a number of calls
@@ -818,3 +820,27 @@ class Interface:
         
         area = process.area_sqkm(bbox, srsname=srsname)
         return area
+    def sar_download(self, sar_url:str, **kwargs):
+        """
+        Args:
+            :param sar_url (str): the URL from the "legacyID" field in the metadata of the image.
+        Kwargs
+        :param outputpath: (str) directory where files are to be downloaded. If not provided will download to the users home directory.
+        :return:
+        """
+        if "evwhs" not in self._session["base_url"]:
+            raise Exception("SAR data is not available on Securewatch.")
+
+        sar_base_url = sar_url.split("index.html")[0]
+        html_response = requests.request("GET", sar_url, headers=self.sar_headers)
+        soup = bs(html_response.text,'html.parser')
+        sar_files = [a.text for a in soup.find_all('a', href=True)]
+        downloads = []
+        for file in sar_files:
+            downloadurl = f'{sar_base_url}{file}'
+            response = requests.request("GET",url=downloadurl,headers=self.sar_headers)
+            process._response_handler(response)
+            print(f"Downloading {file}")
+            downloads.append(file)
+            process.download_file(response, format_response=file.split(".")[1], download_path=f'{kwargs["outputpath"]}{file}')
+        return downloads

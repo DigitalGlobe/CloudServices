@@ -1,5 +1,10 @@
 # Release Notes
 
+## Version 1.4.0 (Oct 25, 2023)
+
+- Added SAR download functionality for GEGD/EVWHS customers.
+- Changed default thread number for `get_full_res_image` function from 100 to 25
+
 ## Version 1.3.1 (May 22, 2023)
 
 - Bug fixes to get_full_res function
