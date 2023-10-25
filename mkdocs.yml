@@ -16,6 +16,7 @@ nav:
         - 'band_manipulation.md'
         - 'create_mosaic.md'
         - 'get_filter_parameters.md'
+        - 'evwhs_download_SAR.md'
         - 'cli_commands.md'
     - 'Release Notes':
         - 'release_notes.md'

@@ -19,7 +19,9 @@ def check_for_config():
 @click.option('--connectid', '-c', help='Your connect Id', type=str)
 @click.option('--username', '-u', help='Your username (if required)', type=str)
 @click.option('--password', '-p', help='Your password (if required)', type=str)
-def config_file(domain=None, connectid=None, username=None, password=None):
+@click.option('--saruser', '-S', help='Your SAR username for downloading 3rd party content (only required for SAR data access)', type=str)
+@click.option('--sarpass', '-P', help='Your SAR password for downloading 3rd party content (only required for SAR data access )', type=str)
+def config_file(domain=None, connectid=None, username=None, password=None, saruser=None, sarpass=None):
     """
     Function creates a configuration file for authentication use for Maxar tenants
     """
@@ -81,12 +83,27 @@ def config_file(domain=None, connectid=None, username=None, password=None):
             password = click.prompt('Your password', hide_input=True, confirmation_prompt=True)
         config = ['[ogc]', 'user_tenant = {}'.format(domain.lower()), 'user_connectid = {}'.format(connectid),
                   'user_name = {}'.format(username), 'user_password = {}'.format(password)]
-        with open(os.path.join(home_dir, ".ogc-config"), "w") as f:
-            for line in config:
-                f.write(line)
-                f.write('\n')
     else:
         return click.echo("Invalid input. Please run command again and enter either y or n")
+    if domain == "https://evwhs.digitalglobe.com/":
+        sar_data = click.prompt('Do you have a username and password for Sar data access? [y/n]')
+        if sar_data.lower() == 'y':
+            if saruser == None:
+                saruser = click.prompt('Your SAR Username:')
+            if sarpass == None:
+                sarpass = click.prompt('Your SAR Password', hide_input=True, confirmation_prompt=True)
+            config = ['[ogc]', 'user_tenant = {}'.format(domain.lower()), 'user_connectid = {}'.format(connectid),
+                      'user_name = {}'.format(username), 'user_password = {}'.format(password), f'saruser = {saruser}',
+                      f'sarpass = {sarpass}']
+        elif sar_data.lower() == "n":
+            pass
+        else:
+            return click.echo("Invalid input. Please run command again and enter either y or n")
+    with open(os.path.join(home_dir, ".ogc-config"), "w") as f:
+        for line in config:
+            f.write(line)
+            f.write('\n')
+
     return click.echo("OGC config file created. File is located in {}".format(home_dir))
 
 

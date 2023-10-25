@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
   name = 'Maxar_OGC',
-  version = '1.3.1',
+  version = '1.4.0',
   license='MIT',
   description = 'SDK for interacting with Maxar imagery platforms',
   long_description=README,
