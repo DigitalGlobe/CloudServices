@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
   name = 'Maxar_OGC',
-  version = '1.4.0',
+  version = '1.5.0',
   license='MIT',
   description = 'SDK for interacting with Maxar imagery platforms',
   long_description=README,
@@ -19,7 +19,7 @@ setup(
         'Source': 'https://github.com/DigitalGlobe/CloudServices'
         },
   keywords = ['OGC', 'WMS', 'WFS', 'WMTS', 'WCS', 'MAXAR', 'IMAGERY', 'GIS'],
-  python_requires= '>=3.6',
+  python_requires= '>=3.8',
   install_requires=[
           'pyproj',
           'shapely',
