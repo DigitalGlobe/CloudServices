@@ -26,7 +26,7 @@ class Auth:
         self.connect_id = connectid
         self.username = username
         self.password = password
-        self.version = 'python_2.0_1.4.0'
+        self.version = 'python_2.0_1.5.0'
         self.sar_username = sar_username
         self.sar_password = sar_password
 
@@ -106,13 +106,16 @@ class Auth:
     def _get_session(self):
         session = {'base_url': self.base_url,
                    'connectid': self.connect_id,
-                   'version': self.version}
+                   'version': self.version,
+                   'headers': None,
+                   'sar_header': None}
         if self.username and self.password:
             header = {'Authorization': 'Basic {}'.format(self._encode_creds(self.username, self.password))}
+            session.update({'headers': header})
         if self.sar_username and self.sar_password:
             sar_header = {'Authorization': 'Basic {}'.format(self._encode_creds(self.sar_username,self.sar_password))} 
             session.update({"sar_header": sar_header})
-        session.update({'headers': header})
+
         return session
 
     def _encode_creds(self, username, password):

@@ -1,5 +1,10 @@
 # Release Notes
 
+## Version 1.5.0 (Dec 12, 2023)
+
+- Fixed bug for no-auth connect IDs.
+- Updated minimum version of Python to 3.8
+
 ## Version 1.4.0 (Oct 25, 2023)
 
 - Added SAR download functionality for GEGD/EVWHS customers.
